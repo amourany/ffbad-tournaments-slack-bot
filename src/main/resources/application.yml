@@ -1,0 +1,6 @@
+myffbad:
+  url: https://www.myffbad.fr
+
+spring:
+  config:
+    import: secrets.properties
