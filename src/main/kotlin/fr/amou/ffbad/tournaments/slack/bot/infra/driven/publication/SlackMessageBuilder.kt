@@ -7,7 +7,7 @@ import com.slack.api.model.block.composition.MarkdownTextObject
 import com.slack.api.model.block.composition.PlainTextObject
 import com.slack.api.model.block.element.ButtonElement
 import com.slack.api.model.block.element.ImageElement
-import fr.amou.ffbad.tournaments.slack.bot.domain.core.TournamentInfo
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfoDetails
@@ -17,37 +17,21 @@ import java.util.Locale.FRENCH
 
 fun buildTournamentSlackMessage(info: TournamentInfo, details: TournamentInfoDetails): List<LayoutBlock> {
 
-    val dateLine = PlainTextObject.builder()
-        .text(":calendar: : ${dateToFrenchDate(info.startDate)} et ${dateToFrenchDate(info.endDate)}")
-        .build()
+    val dateLine = ":calendar: : ${info.dates.joinToString(", ") { dateToFrenchDate(it) }}"
+    val locationLine = ":round_pushpin: : ${info.location}"
+    val disciplinesLine = ":busts_in_silhouette: : ${info.disciplines.joinToString(", ") { it.toSlackMessage() }}"
+    val rankingLine = ":chart_with_upwards_trend: : ${info.sublevels.joinToString(", ")}"
+    val pricesLine = ":euro: : ${
+        details.prices.joinToString(", ")
+        { "${it.price}€ pour ${it.registrationTable} tableau${if (it.registrationTable > 1) "x" else ""}" }
+    }"
 
-    val locationLine = PlainTextObject.builder().text(":round_pushpin: : ${info.location}").build()
-
-    val disciplinesLine = PlainTextObject.builder()
-        .text(":busts_in_silhouette: : ${info.disciplines.joinToString(", ") { it.toSlackMessage() }}")
-        .build()
-
-    val rankingLine =
-        MarkdownTextObject.builder().text(":chart_with_upwards_trend: : ${info.sublevels.joinToString(", ")}").build()
-
-    val pricesLine =
-        PlainTextObject.builder()
-            .text(":euro: : ${
-                details.prices.joinToString(", ")
-                { "${it.price}€ pour ${it.registrationTable} tableau${if (it.registrationTable > 1) "x" else ""}" }
-            }"
-            )
-            .build()
+    val messageContent = listOf(dateLine, locationLine, disciplinesLine, rankingLine, pricesLine)
 
     return listOf(
         HeaderBlock.builder().text(PlainTextObject.builder().text(info.name).build()).build(),
-        SectionBlock.builder().text(PlainTextObject.builder().text(" ").build())
+        SectionBlock.builder().text(PlainTextObject.builder().text(messageContent.joinToString("\n\n")).build())
             .accessory(ImageElement.builder().imageUrl(info.logo).altText("Logo").build()).build(),
-        SectionBlock.builder().text(dateLine).build(),
-        SectionBlock.builder().text(locationLine).build(),
-        SectionBlock.builder().text(disciplinesLine).build(),
-        SectionBlock.builder().text(rankingLine).build(),
-        SectionBlock.builder().text(pricesLine).build()
     )
 }
 

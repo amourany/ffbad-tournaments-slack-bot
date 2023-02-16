@@ -28,9 +28,10 @@ data class RestTournament(
 data class Organizer(val logo: String?)
 
 data class RestTournamentDetailsResponse(
-    val description: String? = "",
     val categories: List<String>,
+    val description: String? = "",
     val documents: List<RestTournamentDocument>,
+    val isParabad: Boolean,
     val prices: List<RestTournamentPrice>
 )
 

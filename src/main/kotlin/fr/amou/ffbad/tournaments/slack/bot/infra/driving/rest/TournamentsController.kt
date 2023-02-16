@@ -1,7 +1,7 @@
 package fr.amou.ffbad.tournaments.slack.bot.infra.driving.rest
 
 import fr.amou.ffbad.tournaments.slack.bot.domain.api.ListTournaments
-import fr.amou.ffbad.tournaments.slack.bot.domain.core.TournamentInfo
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.AgeCategory.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Query
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking.*

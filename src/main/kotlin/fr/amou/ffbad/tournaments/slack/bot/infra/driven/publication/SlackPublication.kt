@@ -2,7 +2,7 @@ package fr.amou.ffbad.tournaments.slack.bot.infra.driven.publication
 
 import com.slack.api.Slack
 import com.slack.api.methods.request.chat.ChatPostMessageRequest
-import fr.amou.ffbad.tournaments.slack.bot.domain.core.TournamentInfo
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfoDetails
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Publication
 import fr.amou.ffbad.tournaments.slack.bot.infra.driven.publication.config.SlackSettings

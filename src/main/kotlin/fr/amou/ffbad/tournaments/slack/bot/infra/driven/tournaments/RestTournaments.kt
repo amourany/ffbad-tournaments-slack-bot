@@ -4,7 +4,7 @@ import arrow.core.None
 import arrow.core.Option
 import arrow.core.Some
 import arrow.core.toOption
-import fr.amou.ffbad.tournaments.slack.bot.domain.core.TournamentInfo
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Tournaments
 import fr.amou.ffbad.tournaments.slack.bot.infra.driven.OnFailure
@@ -32,7 +32,7 @@ class RestTournaments(
                 "Caller-URL" to "/api/search/",
                 "Content-Type" to "application/json",
                 "Verify-Token" to searchVerifyToken
-        )
+            )
 
         return restCall(
             call = myFFBadClient.findTournaments(headers = headers, query = query.toRestQuery()),
@@ -48,7 +48,7 @@ class RestTournaments(
                 "currentPersonId" to "1",
                 "Content-Type" to "application/json",
                 "Verify-Token" to detailsVerifyToken
-        )
+            )
 
         return restCall(
             call = myFFBadClient.findTournamentDetails(headers = headers, id = id),
@@ -63,8 +63,7 @@ fun RestTournament.toDomain() =
         competitionId = number,
         name = name,
         disciplines = discipline.split(",").map { Disciplines.fromShortName(it) },
-        startDate = LocalDate.parse(startDate),
-        endDate = LocalDate.parse(endDate),
+        dates = LocalDate.parse(startDate).datesUntil(LocalDate.parse(endDate).plusDays(1)).toList(),
         joinLimitDate = LocalDate.parse(limitDate),
         location = location,
         sublevels = sublevel.split(",").map { Ranking.valueOf(it.trim()) },
@@ -74,9 +73,10 @@ fun RestTournament.toDomain() =
 
 fun RestTournamentDetailsResponse.toDomain() =
     TournamentInfoDetails(
-        description = description.toOption().fold({ "" }, { it }),
         categories = categories,
+        description = description.toOption().fold({ "" }, { it }),
         document = documents.map { TournamentDocument(it.type, it.url) }.first { it.type == "Règlement particulier" },
+        isParabad = isParabad,
         prices = prices.map { TournamentPrice(it.price, it.registrationTable) }
     )
 
