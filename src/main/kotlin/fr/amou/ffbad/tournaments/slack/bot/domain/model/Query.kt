@@ -12,4 +12,5 @@ data class Query(
     val dateFrom: LocalDateTime,
     val dateTo: LocalDateTime,
     val sort: String,
+    val offset: Int
 )

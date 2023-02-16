@@ -18,12 +18,13 @@ class TournamentsController(val listTournaments: ListTournaments) : ApplicationR
             type = TOURNAMENT,
             text = "",
             postalCode = "92320",
-            distance = 10,
+            distance = 15,
             subLevels = listOf(D8, D9, P10, P11, P12, NC),
             categories = listOf(SENIOR),
             dateFrom = now(),
             dateTo = now().plusYears(1),
-            sort = "dateFrom-ASC"
+            sort = "dateFrom-ASC",
+            offset = 0
         )
         listTournaments.from(query)
     }

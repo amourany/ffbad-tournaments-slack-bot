@@ -7,17 +7,17 @@ import com.slack.api.model.block.composition.MarkdownTextObject
 import com.slack.api.model.block.composition.PlainTextObject
 import com.slack.api.model.block.element.ButtonElement
 import com.slack.api.model.block.element.ImageElement
-import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines.*
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfoDetails
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ofPattern
 import java.util.Locale.FRENCH
 
 fun buildTournamentSlackMessage(info: TournamentInfo, details: TournamentInfoDetails): List<LayoutBlock> {
 
-    val dateLine = ":calendar: : ${info.dates.joinToString(", ") { dateToFrenchDate(it) }}"
+    val dateLine = ":calendar: : ${info.dates.joinToString(", ") { it.toFrenchDate() }}"
     val locationLine = ":round_pushpin: : ${info.location}"
     val disciplinesLine = ":busts_in_silhouette: : ${info.disciplines.joinToString(", ") { it.toSlackMessage() }}"
     val rankingLine = ":chart_with_upwards_trend: : ${info.sublevels.joinToString(", ")}"
@@ -25,8 +25,11 @@ fun buildTournamentSlackMessage(info: TournamentInfo, details: TournamentInfoDet
         details.prices.joinToString(", ")
         { "${it.price}€ pour ${it.registrationTable} tableau${if (it.registrationTable > 1) "x" else ""}" }
     }"
+    val registrationEndLine = ":stopwatch: : Inscriptions jusqu'au ${info.joinLimitDate.toFrenchDate()}"
+    val moreInfosLine = "Pour plus d'infos et vous organiser :arrow_heading_down:"
 
-    val messageContent = listOf(dateLine, locationLine, disciplinesLine, rankingLine, pricesLine)
+    val messageContent =
+        listOf(dateLine, locationLine, disciplinesLine, rankingLine, pricesLine, registrationEndLine, moreInfosLine)
 
     return listOf(
         HeaderBlock.builder().text(PlainTextObject.builder().text(info.name).build()).build(),
@@ -59,10 +62,7 @@ fun buildDescriptionSlackMessage(description: String): List<LayoutBlock> {
     )
 }
 
-fun dateToFrenchDate(date: LocalDate): String {
-    val formatter = DateTimeFormatter.ofPattern("EEEE dd MMMM", FRENCH)
-    return date.format(formatter)
-}
+fun LocalDate.toFrenchDate(): String = this.format(ofPattern("EEEE dd MMMM", FRENCH))
 
 fun Disciplines.toSlackMessage(): String = when (this) {
     MEN_SINGLE -> ":man_standing: Simple homme"

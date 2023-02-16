@@ -6,7 +6,7 @@ import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking
 data class RestQuery(
     val type: String,
     val text: String,
-    val offset: Int = 0,
+    val offset: Int,
     val postalCode: String,
     val distance: Int,
     val sublevels: List<Int>,
@@ -26,7 +26,8 @@ fun Query.toRestQuery() = RestQuery(
     categories = categories.map { it.ordinal },
     dateFrom = dateFrom.toString(),
     dateTo = dateTo.toString(),
-    sort = sort
+    sort = sort,
+    offset = offset
 )
 
 fun Ranking.toSubLevel() = this.ordinal + 115

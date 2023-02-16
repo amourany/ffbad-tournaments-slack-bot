@@ -36,7 +36,14 @@ class RestTournaments(
 
         return restCall(
             call = myFFBadClient.findTournaments(headers = headers, query = query.toRestQuery()),
-            onSuccess = { response -> response.body()!!.tournaments.map { it.toDomain() } },
+            onSuccess = { response ->
+                val tournamentPage = response.body()!!
+                val tournaments = tournamentPage.tournaments.map { it.toDomain() }
+                when (tournamentPage.currentPage) {
+                    tournamentPage.totalPage -> tournaments
+                    else -> tournaments.plus(find(query.copy(offset = tournamentPage.currentPage * 20)))
+                }
+            },
             onFailure = OnFailure(emptyList(), "Unable to fetch tournaments.")
         )(logger)
     }

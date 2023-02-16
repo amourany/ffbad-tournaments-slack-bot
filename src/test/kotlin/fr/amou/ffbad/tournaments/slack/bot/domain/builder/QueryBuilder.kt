@@ -19,7 +19,8 @@ fun aQuery(
     categories: List<AgeCategory> = listOf(SENIOR),
     dateFrom: LocalDateTime = of(2023, 2, 16, 12, 0, 0),
     dateTo: LocalDateTime = of(2024, 2, 16, 12, 0, 0),
-    sort: String = "ASC"
+    sort: String = "ASC",
+    offset: Int = 0
 ) =
     Query(
         type = type,
@@ -30,5 +31,6 @@ fun aQuery(
         categories = categories,
         dateFrom = dateFrom,
         dateTo = dateTo,
-        sort = sort
+        sort = sort,
+        offset = offset
     )
