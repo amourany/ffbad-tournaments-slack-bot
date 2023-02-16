@@ -6,13 +6,10 @@ import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfoDetails
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Publication
 import fr.amou.ffbad.tournaments.slack.bot.infra.driven.publication.config.SlackSettings
-import org.slf4j.LoggerFactory.getLogger
 import org.springframework.stereotype.Component
 
 @Component
 class SlackPublication(val slack: Slack, val slackSettings: SlackSettings) : Publication {
-
-    val logger = getLogger(SlackPublication::class.java)
 
     override fun publish(info: TournamentInfo, details: TournamentInfoDetails) {
         val authSlackClient = slack.methods(slackSettings.token)
@@ -23,7 +20,6 @@ class SlackPublication(val slack: Slack, val slackSettings: SlackSettings) : Pub
             .blocks(buildTournamentSlackMessage(info, details))
             .build()
         val newTournamentResponse = authSlackClient.chatPostMessage(newTournamentMessage)
-        logger.info(newTournamentResponse.toString())
 
         if (newTournamentResponse.isOk) {
 

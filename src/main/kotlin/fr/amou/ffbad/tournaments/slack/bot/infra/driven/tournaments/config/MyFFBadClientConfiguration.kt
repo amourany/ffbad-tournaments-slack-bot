@@ -61,7 +61,7 @@ class MyFFBadClientConfiguration(val myFFBadSettings: MyFFBadSettings) {
             OkHttpClient.Builder()
                 .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0])
                 .hostnameVerifier { _: String?, _: SSLSession? -> true }
-                .addInterceptor(logging)
+//                .addInterceptor(logging)
                 .build()
         } catch (e: Exception) {
             throw RuntimeException(e)
