@@ -9,9 +9,9 @@ import fr.amou.ffbad.tournaments.slack.bot.infra.driven.tournaments.config.MyFFB
 import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime
 
-class RestTournamentsTest(private val myFFBadClient: MyFFBadClient): IntegrationSpec({
+class RestTournamentsTest(private val myFFBadClient: MyFFBadClient) : IntegrationSpec({
 
-    val tournaments = RestTournaments(myFFBadClient, verifyToken = "")
+    val tournaments = RestTournaments(myFFBadClient, searchVerifyToken = "", detailsVerifyToken = "")
 
     should("fetch tournaments from MyFFBad Client") {
         // Given

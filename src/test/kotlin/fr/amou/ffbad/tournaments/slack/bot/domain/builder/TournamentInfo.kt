@@ -1,9 +1,8 @@
 package fr.amou.ffbad.tournaments.slack.bot.domain.builder
 
 import fr.amou.ffbad.tournaments.slack.bot.domain.core.TournamentInfo
-import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines.*
-import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking.*
 import java.time.LocalDate
 
@@ -29,3 +28,15 @@ fun aTournament(
         sublevels = sublevels,
         logo = logo
     )
+
+fun aTournamentDetails(
+    description: String = "",
+    categories: List<String> = listOf("Adultes"),
+    document: TournamentDocument = TournamentDocument(type = "Réglement particulier", url = "some-url"),
+    prices: List<TournamentPrice> = listOf(TournamentPrice(price = 10, registrationTable = 1))
+) = TournamentInfoDetails(
+    description = description,
+    categories = categories,
+    document = document,
+    prices = prices
+)

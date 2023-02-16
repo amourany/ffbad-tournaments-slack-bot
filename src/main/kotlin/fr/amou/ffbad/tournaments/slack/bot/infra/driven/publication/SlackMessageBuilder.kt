@@ -5,41 +5,78 @@ import com.slack.api.model.block.LayoutBlock
 import com.slack.api.model.block.SectionBlock
 import com.slack.api.model.block.composition.MarkdownTextObject
 import com.slack.api.model.block.composition.PlainTextObject
-import com.slack.api.model.block.composition.TextObject
+import com.slack.api.model.block.element.ButtonElement
 import com.slack.api.model.block.element.ImageElement
 import fr.amou.ffbad.tournaments.slack.bot.domain.core.TournamentInfo
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines.*
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfoDetails
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale.FRENCH
 
-fun TournamentInfo.toSlackMessage(): List<LayoutBlock> {
+fun buildTournamentSlackMessage(info: TournamentInfo, details: TournamentInfoDetails): List<LayoutBlock> {
 
-    val dateAndLocationLine = listOf<TextObject>(
-        PlainTextObject.builder().text(":calendar: : ${dateToFrenchDate(startDate)} et ${dateToFrenchDate(endDate)}")
-            .build(),
-        PlainTextObject.builder().text(":round_pushpin: : $location").build()
-    )
+    val dateLine = PlainTextObject.builder()
+        .text(":calendar: : ${dateToFrenchDate(info.startDate)} et ${dateToFrenchDate(info.endDate)}")
+        .build()
+
+    val locationLine = PlainTextObject.builder().text(":round_pushpin: : ${info.location}").build()
 
     val disciplinesLine = PlainTextObject.builder()
-        .text(":busts_in_silhouette: : ${disciplines.joinToString(", ") { it.toSlackMessage() }}")
+        .text(":busts_in_silhouette: : ${info.disciplines.joinToString(", ") { it.toSlackMessage() }}")
         .build()
 
     val rankingLine =
-        MarkdownTextObject.builder().text("*Classements* : ${sublevels.joinToString(", ")}").build()
+        MarkdownTextObject.builder().text(":chart_with_upwards_trend: : ${info.sublevels.joinToString(", ")}").build()
+
+    val pricesLine =
+        PlainTextObject.builder()
+            .text(":euro: : ${
+                details.prices.joinToString(", ")
+                { "${it.price}€ pour ${it.registrationTable} tableau${if (it.registrationTable > 1) "x" else ""}" }
+            }"
+            )
+            .build()
 
     return listOf(
-        HeaderBlock.builder().text(PlainTextObject.builder().text(name).build()).build(),
-        SectionBlock.builder().fields(dateAndLocationLine)
-            .accessory(ImageElement.builder().imageUrl(logo).altText("Logo").build()).build(),
+        HeaderBlock.builder().text(PlainTextObject.builder().text(info.name).build()).build(),
+        SectionBlock.builder().text(PlainTextObject.builder().text(" ").build())
+            .accessory(ImageElement.builder().imageUrl(info.logo).altText("Logo").build()).build(),
+        SectionBlock.builder().text(dateLine).build(),
+        SectionBlock.builder().text(locationLine).build(),
         SectionBlock.builder().text(disciplinesLine).build(),
-        SectionBlock.builder().text(rankingLine).build()
+        SectionBlock.builder().text(rankingLine).build(),
+        SectionBlock.builder().text(pricesLine).build()
+    )
+}
+
+fun buildParticularRulesSlackMessage(details: TournamentInfoDetails): List<LayoutBlock> {
+    return listOf(
+        SectionBlock.builder()
+            .text(PlainTextObject.builder().text("Toutes les infos : ").build())
+            .accessory(
+                ButtonElement.builder()
+                    .text(PlainTextObject.builder().text(details.document.type).build())
+                    .url(details.document.url).build()
+            )
+            .build(),
+    )
+}
+
+fun buildDescriptionSlackMessage(description: String): List<LayoutBlock> {
+    return listOf(
+        SectionBlock.builder()
+            .text(PlainTextObject.builder().text("Un mot des organisateurs : ").build())
+            .build(),
+        SectionBlock.builder()
+            .text(MarkdownTextObject.builder().text("> ${description.replace("\n", "\n> ")}").build())
+            .build()
     )
 }
 
 fun dateToFrenchDate(date: LocalDate): String {
-    val formatter = DateTimeFormatter.ofPattern("dd MMMM", Locale.FRENCH)
+    val formatter = DateTimeFormatter.ofPattern("EEEE dd MMMM", FRENCH)
     return date.format(formatter)
 }
 

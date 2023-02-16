@@ -5,6 +5,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.HeaderMap
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 data class RestTournamentsResponse(
     val totalPage: Int,
@@ -14,7 +15,7 @@ data class RestTournamentsResponse(
 
 data class RestTournament(
     val name: String,
-    val competitionId: String,
+    val number: String,
     val discipline: String,
     val startDate: String,
     val endDate: String,
@@ -26,10 +27,31 @@ data class RestTournament(
 
 data class Organizer(val logo: String?)
 
+data class RestTournamentDetailsResponse(
+    val description: String? = "",
+    val categories: List<String>,
+    val documents: List<RestTournamentDocument>,
+    val prices: List<RestTournamentPrice>
+)
+
+data class RestTournamentDocument(
+    val type: String,
+    val url: String
+)
+
+data class RestTournamentPrice(
+    val price: Int,
+    val registrationTable: Int
+)
+
 interface MyFFBadClient {
 
     @POST("/api/search")
     fun findTournaments(@HeaderMap headers: Map<String, String>, @Body query: RestQuery): Call<RestTournamentsResponse>
+
+    @POST("api/tournament/{id}/informations")
+    fun findTournamentDetails(@HeaderMap headers: Map<String, String>, @Path("id") id: String): Call<RestTournamentDetailsResponse>
 }
+
 
 

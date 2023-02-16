@@ -1,19 +1,23 @@
 package fr.amou.ffbad.tournaments.slack.bot.domain.core
 
+import arrow.core.Some
 import fr.amou.ffbad.tournaments.slack.bot.domain.builder.aTournament
+import fr.amou.ffbad.tournaments.slack.bot.domain.builder.aTournamentDetails
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.AgeCategory.SENIOR
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Query
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentType.TOURNAMENT
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Publication
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Tournaments
+import io.kotest.core.spec.IsolationMode.InstancePerTest
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.shouldBe
 import io.mockk.every
+import io.mockk.verify
 import java.time.LocalDateTime.now
 import io.mockk.mockk as mock
 
 class TournamentsServiceTest : ShouldSpec({
+    isolationMode = InstancePerTest
 
     val tournaments: Tournaments = mock()
     val publication: Publication = mock()
@@ -36,13 +40,15 @@ class TournamentsServiceTest : ShouldSpec({
         every { tournaments.find(any()) } returns emptyList()
 
         // When
-        val foundTournaments = tournamentsService.listTournaments(query)
+        tournamentsService.listTournaments(query)
 
         // Then
-        foundTournaments shouldBe emptyList()
+        verify(exactly = 1) {tournaments.find(any())}
+        verify(exactly = 0) {tournaments.details(any())}
+        verify(exactly = 0) {publication.publish(any(), any())}
     }
 
-    should("fetch tournaments") {
+    should("fetch tournaments and tournaments details") {
         // Given
         val query = Query(
             type = TOURNAMENT,
@@ -56,12 +62,15 @@ class TournamentsServiceTest : ShouldSpec({
             sort = "ASC"
         )
         every { tournaments.find(any()) } returns listOf(aTournament(name="My tournament"))
-        every { publication.publish(any()) } returns Unit
+        every { tournaments.details(any()) } returns Some(aTournamentDetails())
+        every { publication.publish(any(), any()) } returns Unit
 
         // When
-        val foundTournaments = tournamentsService.listTournaments(query)
+        tournamentsService.listTournaments(query)
 
         // Then
-        foundTournaments shouldBe listOf(aTournament(name="My tournament"))
+        verify(exactly = 1) {tournaments.find(any())}
+        verify(exactly = 1) {tournaments.details(any())}
+        verify(exactly = 1) {publication.publish(any(), any())}
     }
 })

@@ -1,2 +1,9 @@
 myffbad:
   url: http://localhost:8989/
+  searchVerifyToken: "a"
+  detailsVerifyToken: "b"
+
+slack:
+  token: "token"
+  channel: "#channel"
+
