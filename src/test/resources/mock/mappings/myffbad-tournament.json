@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPattern": "/api/tournament/([0-9]*)/informations",
+    "headers": {
+      "Content-Type": {
+        "equalTo": "application/json"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "tournament-response.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

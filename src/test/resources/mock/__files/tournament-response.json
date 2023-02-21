@@ -1,0 +1,373 @@
+{
+  "competitionId": 4317,
+  "tournamentNumber": 2202310,
+  "name": "1ère édition du tournoi du BBG13",
+  "number": 2202310,
+  "startDate": "2023-03-04T00:00:00.000Z",
+  "endDate": "2023-03-05T00:00:00.000Z",
+  "lotteryDate": "2023-02-17T00:00:00.000Z",
+  "registrationLimitDate": "2023-02-02T00:00:00.000Z",
+  "maxTableAuthorized": 2,
+  "fileImportStatus": "no-result",
+  "pumproomScore": 0,
+  "eventScore": 0,
+  "organizationScore": 0,
+  "gymnasiumScore": 0,
+  "location": "Paris",
+  "latitude": "48.8287",
+  "longitude": "2.3625",
+  "discipline": [
+    "Double Hommes",
+    "Double Dames",
+    "Double Mixte"
+  ],
+  "originalCategories": [
+    "Adultes"
+  ],
+  "categories": [
+    "Adultes"
+  ],
+  "subLevel": [
+    "D8",
+    "D9",
+    "P10",
+    "P11",
+    "P12",
+    "NC"
+  ],
+  "judge": {
+    "personId": 150582,
+    "licence": "00387959",
+    "lastName": "LE PENNEC",
+    "firstName": "Guillaume",
+    "sex": "HOMME",
+    "photo": null,
+    "contactPhone": {
+      "isContact": 1,
+      "isHidden": "0",
+      "type": "Tél. Portable",
+      "typeId": "2",
+      "value": "+33633277303"
+    },
+    "contactEmail": {
+      "isContact": 1,
+      "isHidden": "0",
+      "type": "E-mail Principal",
+      "typeId": "3",
+      "value": "guillaume.arbitrage@gmail.com"
+    },
+    "contactAddress": {
+      "address": "14 Allee De La Prairie",
+      "addressId": "152464",
+      "building": "",
+      "cedex": "",
+      "city": "Chelles",
+      "country": "France",
+      "countryId": "83",
+      "floor": "",
+      "isContact": 1,
+      "locality": "",
+      "postalCode": "77500"
+    },
+    "isDataPublic": true,
+    "isResultPublic": true,
+    "isInfoFFBaD": true
+  },
+  "geo": {
+    "personId": 770603,
+    "licence": "06881603",
+    "lastName": "ALLARY",
+    "firstName": "Violette",
+    "sex": "FEMME",
+    "photo": null,
+    "contactPhone": [],
+    "contactEmail": {
+      "isContact": 1,
+      "isHidden": "0",
+      "type": "E-mail Principal",
+      "typeId": "3",
+      "value": "jarode2409@gmail.com"
+    },
+    "contactAddress": {
+      "address": "21 rue Gabriel Husson",
+      "addressId": "833785",
+      "building": "Bât. 7  - Villa Soléa",
+      "cedex": "",
+      "city": "Romainville",
+      "country": "France",
+      "countryId": "83",
+      "floor": "Appt 12",
+      "isContact": 1,
+      "locality": "",
+      "postalCode": "93230"
+    },
+    "isDataPublic": true,
+    "isResultPublic": true,
+    "isInfoFFBaD": true
+  },
+  "organizer": {
+    "addressId": 400137,
+    "addressContactId": 400138,
+    "addressTownHallId": 735703,
+    "affiliateNumber": "LIFB.75.06.079",
+    "city": "Paris 13e Arrondissement",
+    "contact": null,
+    "department": 75,
+    "mail": "bbg13.agevp@gmail.com",
+    "fax": null,
+    "initials": "BBG1375",
+    "id": 2079,
+    "logo": "https://poona.ffbad.org/download/logo/logo_instance_BBG1375_2079.png",
+    "mobile": "+33609428071",
+    "name": "BBG13 Paris Badminton",
+    "type": "Club",
+    "website": "http://bbg13.eu/index.php/accueil/"
+  },
+  "organizerPerson": {
+    "personId": 202551,
+    "licence": "00437789",
+    "lastName": "BERSTEL",
+    "firstName": "Clara",
+    "sex": "FEMME",
+    "photo": null,
+    "contactPhone": {
+      "isContact": 1,
+      "isHidden": "1",
+      "type": "Tél. Fixe",
+      "typeId": "5",
+      "value": "+33609428071"
+    },
+    "contactEmail": {
+      "isContact": 1,
+      "isHidden": "1",
+      "type": "E-mail Principal",
+      "typeId": "3",
+      "value": "cberstel@gmail.com"
+    },
+    "contactAddress": {
+      "address": "54 RUE SAINT BLAISE",
+      "addressId": "204412",
+      "building": "",
+      "cedex": "",
+      "city": "Paris",
+      "country": "France",
+      "countryId": "83",
+      "floor": "",
+      "isContact": 1,
+      "locality": "",
+      "postalCode": "75020"
+    },
+    "isDataPublic": true,
+    "isResultPublic": true,
+    "isInfoFFBaD": true
+  },
+  "mailOrganizer": "cberstel@gmail.com",
+  "type": "Tournoi individuel",
+  "isParabad": false,
+  "isLabelAgenda21": false,
+  "isLabelEcoBad": true,
+  "isPumproom": true,
+  "isRescue": false,
+  "isStandRope": true,
+  "isStandSale": true,
+  "documents": [
+    {
+      "documentId": "5250",
+      "type": "Règlement particulier",
+      "name": "Reglement_particulier_BBG13_636e30e566816.pdf",
+      "extension": "pdf",
+      "size": "358418",
+      "url": "https://poona.ffbad.org/download.php?file=dl-ZXZlbmVtZW50L1JlZ2xlbWVudF9wYXJ0aWN1bGllcl9CQkcxM182MzZlMzBlNTY2ODE2LnBkZg==*"
+    },
+    {
+      "documentId": "5909",
+      "type": "Autre document",
+      "name": "Charte_eecoresponsable_du_1er_tournoi_de_doubles_de_BBG13_63923ba961476.pdf",
+      "extension": "pdf",
+      "size": "303534",
+      "url": "https://poona.ffbad.org/download.php?file=dl-ZXZlbmVtZW50L0NoYXJ0ZV9lZWNvcmVzcG9uc2FibGVfZHVfMWVyX3RvdXJub2lfZGVfZG91Ymxlc19kZV9CQkcxM182MzkyM2JhOTYxNDc2LnBkZg==*"
+    },
+    {
+      "documentId": "7093",
+      "type": "Plaquette d'invitation",
+      "name": "Affiche_Tournoi_BBG13_63d924321b391.pdf",
+      "extension": "pdf",
+      "size": "2645620",
+      "url": "https://poona.ffbad.org/download.php?file=dl-ZXZlbmVtZW50L0FmZmljaGVfVG91cm5vaV9CQkcxM182M2Q5MjQzMjFiMzkxLnBkZg==*"
+    },
+    {
+      "documentId": "7094",
+      "type": "Affiche du tournoi",
+      "name": "Captureplaquette_63d9241ba7fad.JPG",
+      "extension": "JPG",
+      "size": "51730",
+      "url": "https://poona.ffbad.org/download.php?file=dl-ZXZlbmVtZW50L0NhcHR1cmVwbGFxdWV0dGVfNjNkOTI0MWJhN2ZhZC5KUEc=*"
+    }
+  ],
+  "description": "Nous sommes ravis de vous accueillir pour la première édition du tournoi de doubles du BBG13 !\r\n\r\nAu programme :\r\n\r\n1. Du sport, bien sûr : \r\n- Tournoi de doubles uniquement, avec découpage selon les séries suivantes : NC/P12, P11/P10, D8/D9,\r\n- Doubles Hommes et Dames le samedi, et Doubles Mixtes le dimanche, \r\n- Avec comme objectif d'avoir 2 sortants par poule (sous réserve du nombre d'inscrits).\r\n\r\n2. De la \"gastronomie\" aussi : \r\n- Une buvette que l'on espère inoubliable,\r\n- Des bénévoles classés N3 en réalisation de crêpes et autres madeleines.\r\n\r\n3. De l'éco-responsabilité : \r\n- Tri des déchets du tournoi, recyclage des volants, etc...\r\n- Buvette majoritairement bio, avec circuit d'approvisionnement court et de saison.\r\n\r\nTout cela en plein Paris, au gymnase Poliveau, idéalement situé près de la gare d'Austerlitz : tout pour vous inciter à venir à pieds, vélo, rollers, trottinette, mais, en tout cas, sans moteur thermique !\r\n\r\nA noter également qu'un stand de notre partenaire AB Sport sera tenu par le célèbre Agus, tout au long du weekend.\r\n\r\nOn espère vous voir nombreux à nos cotés pour cette première aventure !\r\n\r\nEn cas de question, vous pouvez vous reporter à la plaquette (à venir) ou nous contacter au bbg13.tournoi@gmail.com\r\n\r\nN'oubliez pas de lire le règlement particulier, ainsi que la charte éco-reponsable, avant de vous inscrire, cela peut toujours être utile ;-)\r\n\r\nInscriptions et règlement uniquement via Badnet en suivant le lien : https://v5.badnet.org/tournoi/public?eventid=16948\r\n\r\nA très vite !",
+  "rewardType": "Aucune récompense",
+  "rewardAmount": 0,
+  "rewardCash": 0,
+  "paymentMethods": [
+    {
+      "methodId": 1,
+      "method": "Carte bancaire",
+      "isActive": false,
+      "description": "Paiement avec votre CB",
+      "file": null,
+      "isOnlinePayment": true
+    },
+    {
+      "methodId": 2,
+      "method": "Chèque",
+      "isActive": false,
+      "description": "Mode de paiement lent et ne vous garantissant pas une place en tableau principal du fait du temps de réception du chèque<br />Le chèque est à envoyer à l'ordre de BBG13 Paris Badminton<br />",
+      "file": null,
+      "isOnlinePayment": false
+    },
+    {
+      "methodId": 3,
+      "method": "Virement",
+      "isActive": false,
+      "description": "Merci d'adresser l'information à l'organisateur comme quoi votre virement a été initié pour un traitement optimal de votre inscription : <br />M. CUTELLE Léonard - leonard.cutelle@outlook.com<br />Le virement doit être adressé au compte suivant : <br /> - Titulaire : AGEVP<br /> - Iban : FR7630003001400003726003753<br /> - BIC : SOGEFRPP",
+      "file": "https://poona.ffbad.org/download.php?file=tmp-dmlyZW1lbnQtMjIwMjMxMC02M2Y0ZjI1MzUxMzY0LnBkZg==*",
+      "isOnlinePayment": false
+    },
+    {
+      "methodId": 6,
+      "method": "Carte bancaire",
+      "isActive": false,
+      "description": "Paiement avec votre CB",
+      "file": null,
+      "isOnlinePayment": true
+    },
+    {
+      "methodId": 7,
+      "method": "Chèque",
+      "isActive": false,
+      "description": "Mode de paiement lent et ne vous garantissant pas une place en tableau principal du fait du temps de réception du chèque<br />Le chèque est à envoyer à l'ordre de BBG13 Paris Badminton<br />",
+      "file": null,
+      "isOnlinePayment": false
+    },
+    {
+      "methodId": 8,
+      "method": "Virement",
+      "isActive": false,
+      "description": "Merci d'adresser l'information à l'organisateur comme quoi votre virement a été initié pour un traitement optimal de votre inscription : <br />M. CUTELLE Léonard - leonard.cutelle@outlook.com<br />Le virement doit être adressé au compte suivant : <br /> - Titulaire : AGEVP<br /> - Iban : FR7630003001400003726003753<br /> - BIC : SOGEFRPP",
+      "file": "https://poona.ffbad.org/download.php?file=tmp-dmlyZW1lbnQtMjIwMjMxMC02M2Y0ZjI1MzUxMzY0LnBkZg==*",
+      "isOnlinePayment": false
+    },
+    {
+      "methodId": 5,
+      "method": "Paiement en espèces sur place",
+      "isActive": false,
+      "description": "Vous vous engagez à régler l'inscription en espèce sur place",
+      "file": null,
+      "isOnlinePayment": false
+    },
+    {
+      "methodId": 4,
+      "method": "Paiement par le club",
+      "isActive": false,
+      "description": "Vous devez rentrer en contact avec votre club pour qu'il effectue le réglement de votre inscription dans les plus brefs délais",
+      "file": null,
+      "isOnlinePayment": false
+    }
+  ],
+  "prices": [
+    {
+      "price": 15,
+      "registrationTable": 1,
+      "isDefault": true,
+      "type": null,
+      "discipline": null,
+      "categories": []
+    },
+    {
+      "price": 22,
+      "registrationTable": 2,
+      "isDefault": true,
+      "type": null,
+      "discipline": null,
+      "categories": []
+    }
+  ],
+  "equipments": [
+    {
+      "address": {
+        "address": "39 BIS RUE POLIVEAU",
+        "addressId": 1086064,
+        "building": null,
+        "cedex": "",
+        "country": "France",
+        "floor": null,
+        "locality": "",
+        "city": "Paris",
+        "postalCode": "75005",
+        "isContact": false
+      },
+      "equipmentId": 219496,
+      "latitude": 48.83978,
+      "longitude": 2.35736,
+      "name": "Centre Sportif Poliveau (TEP)"
+    },
+    {
+      "address": {
+        "address": "39 BIS RUE POLIVEAU",
+        "addressId": 1086064,
+        "building": null,
+        "cedex": "",
+        "country": "France",
+        "floor": null,
+        "locality": "",
+        "city": "Paris",
+        "postalCode": "75005",
+        "isContact": false
+      },
+      "equipmentId": 219496,
+      "latitude": 48.83978,
+      "longitude": 2.35736,
+      "name": "Centre Sportif Poliveau (TEP)"
+    }
+  ],
+  "tables": [],
+  "isRegistrationOpen": false,
+  "openBoards": [
+    {
+      "disciplineId": 3,
+      "discipline": "DOUBLE HOMMES",
+      "datas": [
+        {
+          "name": "DH Adultes",
+          "public": "Adultes",
+          "level": "Niveau entre D9 et NC",
+          "bracketId": 26548
+        }
+      ]
+    },
+    {
+      "disciplineId": 4,
+      "discipline": "DOUBLE DAMES",
+      "datas": [
+        {
+          "name": "DD Adultes",
+          "public": "Adultes",
+          "level": "Niveau entre D9 et NC",
+          "bracketId": 26549
+        }
+      ]
+    },
+    {
+      "disciplineId": 5,
+      "discipline": "DOUBLE MIXTE",
+      "datas": [
+        {
+          "name": "DX Adultes",
+          "public": "Adultes",
+          "level": "Niveau entre D9 et NC",
+          "bracketId": 26550
+        }
+      ]
+    }
+  ]
+}

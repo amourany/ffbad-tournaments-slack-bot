@@ -1,6 +1,15 @@
 myffbad:
   url: https://www.myffbad.fr
+  searchVerifyToken: ${SEARCH_VERIFY_TOKEN}
+  detailsVerifyToken: ${SEARCH_DETAILS_TOKEN}
 
-spring:
-  config:
-    import: secrets.properties
+slack:
+  token: ${SLACK_TOKEN}
+  channel: ${SLACK_CHANNEL}
+
+amazon:
+  dynamodb:
+    endpoint: ${AWS_DYNAMODB_ENDPOINT}
+  aws:
+    accesskey: ${AWS_ACCESS_KEY}
+    secretkey: {AWS_SECRET_KEY}
