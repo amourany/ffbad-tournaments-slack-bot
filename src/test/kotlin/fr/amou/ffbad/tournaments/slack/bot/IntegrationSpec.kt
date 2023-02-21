@@ -9,7 +9,6 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 
@@ -18,7 +17,6 @@ import org.springframework.test.context.ContextConfiguration
 @SpringBootTest(
     classes = [Application::class],
     properties = ["spring.main.allow-bean-definition-overriding=true"],
-    webEnvironment = RANDOM_PORT,
 )
 @ActiveProfiles(value = ["test"])
 @TestInstance(PER_CLASS)

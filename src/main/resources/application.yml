@@ -12,4 +12,4 @@ amazon:
     endpoint: ${AWS_DYNAMODB_ENDPOINT}
   aws:
     accesskey: ${AWS_ACCESS_KEY}
-    secretkey: {AWS_SECRET_KEY}
+    secretkey: ${AWS_SECRET_KEY}

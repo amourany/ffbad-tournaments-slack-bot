@@ -28,4 +28,5 @@ class TournamentsController(val listTournaments: ListTournaments) : ApplicationR
         )
         listTournaments.from(query)
     }
+
 }

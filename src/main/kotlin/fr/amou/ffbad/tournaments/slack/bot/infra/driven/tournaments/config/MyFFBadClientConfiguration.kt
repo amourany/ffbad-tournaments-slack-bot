@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
 import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
+import org.slf4j.LoggerFactory.getLogger
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -14,11 +15,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
-import javax.net.ssl.*
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLSession
+import javax.net.ssl.X509TrustManager
 
 
 @Configuration
 class MyFFBadClientConfiguration(val myFFBadSettings: MyFFBadSettings) {
+
+    val logger = getLogger(MyFFBadClientConfiguration::class.java)
 
     @Bean
     @Primary
@@ -64,6 +69,7 @@ class MyFFBadClientConfiguration(val myFFBadSettings: MyFFBadSettings) {
 //                .addInterceptor(logging)
                 .build()
         } catch (e: Exception) {
+            logger.error(e.message, e)
             throw RuntimeException(e)
         }
     }
