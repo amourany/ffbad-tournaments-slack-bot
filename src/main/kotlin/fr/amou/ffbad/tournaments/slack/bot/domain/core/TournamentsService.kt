@@ -4,40 +4,43 @@ import arrow.core.None
 import arrow.core.Some
 import arrow.core.filterOption
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Query
+import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Cache
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Publication
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Tournaments
 import kotlinx.coroutines.*
-import org.slf4j.LoggerFactory.getLogger
 import org.springframework.stereotype.Service
 import java.time.LocalDate.now
 
 @Service
 class TournamentsService(
     private val tournaments: Tournaments, private val publication: Publication,
-//    private val cache: Cache
+    private val cache: Cache
 ) {
 
-    val logger = getLogger(TournamentsService::class.java)
-
     fun listTournaments(query: Query) {
-        logger.info("TournamentsService.listTournaments")
+
+        val alreadyPublishedTournaments = cache.findAll()
+
         runBlocking(Dispatchers.Default) {
             tournaments.find(query)
                 .parallelMap { tournament ->
                     tournaments.details(tournament.competitionId).fold(
-                        {
-                            logger.info("TournamentsService.listTournaments.None")
-                            None
-                        },
-                        { details ->
-                            logger.info(details.toString())
-                            Some(Pair(tournament, details)) }
+                        { None },
+                        { details -> Some(Pair(tournament, details)) }
                     )
                 }
                 .filterOption()
+                .asSequence()
+                .filter { (tournaments) -> !alreadyPublishedTournaments.contains(tournaments.competitionId) }
                 .filter { (tournaments) -> tournaments.joinLimitDate.isAfter(now()) }
                 .filter { (_, details) -> !details.isParabad }
-                .forEach { (tournament, details) -> publication.publish(tournament, details) }
+                .map { (tournament, details) ->
+                    val isPublished = publication.publish(tournament, details)
+                    Pair(isPublished, tournament)
+                }
+                .filter { (isPublished) -> isPublished }
+                .toList()
+                .forEach { (_, tournament) -> cache.save(tournament.competitionId, tournament.name) }
         }
     }
 }

@@ -34,15 +34,11 @@ class RestTournaments(
                 "Verify-Token" to searchVerifyToken
             )
 
-        logger.info("Searching for tournaments")
-
         return restCall(
             call = myFFBadClient.findTournaments(headers = headers, query = query.toRestQuery()),
             onSuccess = { response ->
-                logger.info(response.toString())
                 val tournamentPage = response.body()!!
                 val tournaments = tournamentPage.tournaments.map { it.toDomain() }
-                logger.info("Found ${tournaments.size} tournaments")
                 when (tournamentPage.currentPage) {
                     tournamentPage.totalPage -> tournaments
                     else -> tournaments.plus(find(query.copy(offset = tournamentPage.currentPage * 20)))

@@ -4,5 +4,5 @@ import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfoDetails
 
 interface Publication {
-    fun publish(info: TournamentInfo, details: TournamentInfoDetails)
+    fun publish(info: TournamentInfo, details: TournamentInfoDetails): Boolean
 }

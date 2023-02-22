@@ -7,3 +7,9 @@ slack:
   token: "token"
   channel: "#channel"
 
+amazon:
+  dynamodb:
+    endpoint: dynamodb.eu-west-3.amazonaws.com
+  aws:
+    accesskey:
+    secretkey:

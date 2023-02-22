@@ -14,7 +14,7 @@ class SlackPublication(val slack: Slack, val slackSettings: SlackSettings) : Pub
 
     val logger = getLogger(SlackPublication::class.java)
 
-    override fun publish(info: TournamentInfo, details: TournamentInfoDetails) {
+    override fun publish(info: TournamentInfo, details: TournamentInfoDetails): Boolean {
         val authSlackClient = slack.methods(slackSettings.token)
 
         val newTournamentMessage = ChatPostMessageRequest.builder()
@@ -46,6 +46,8 @@ class SlackPublication(val slack: Slack, val slackSettings: SlackSettings) : Pub
         } else {
             logger.error(newTournamentResponse.toString())
         }
+
+        return newTournamentResponse.isOk
     }
 }
 

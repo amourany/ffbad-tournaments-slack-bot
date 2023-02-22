@@ -4,6 +4,7 @@ import arrow.core.Some
 import fr.amou.ffbad.tournaments.slack.bot.domain.builder.aQuery
 import fr.amou.ffbad.tournaments.slack.bot.domain.builder.aTournament
 import fr.amou.ffbad.tournaments.slack.bot.domain.builder.aTournamentDetails
+import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Cache
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Publication
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Tournaments
 import io.kotest.core.spec.IsolationMode.InstancePerTest
@@ -18,13 +19,15 @@ class TournamentsServiceTest : ShouldSpec({
 
     val tournaments: Tournaments = mock()
     val publication: Publication = mock()
+    val cache: Cache = mock()
 
-    val tournamentsService = TournamentsService(tournaments, publication)
+    val tournamentsService = TournamentsService(tournaments, publication, cache)
 
     should("not attempt to fetch tournament details when 0 tournaments are found") {
         // Given
         val query = aQuery()
         every { tournaments.find(any()) } returns emptyList()
+        every { cache.findAll() } returns emptyList()
 
         // When
         tournamentsService.listTournaments(query)
@@ -40,7 +43,8 @@ class TournamentsServiceTest : ShouldSpec({
         val query = aQuery()
         every { tournaments.find(any()) } returns listOf(aTournament(name = "My tournament"))
         every { tournaments.details(any()) } returns Some(aTournamentDetails())
-        every { publication.publish(any(), any()) } returns Unit
+        every { publication.publish(any(), any()) } returns false
+        every { cache.findAll() } returns emptyList()
 
         // When
         tournamentsService.listTournaments(query)
@@ -56,6 +60,7 @@ class TournamentsServiceTest : ShouldSpec({
         val query = aQuery()
         every { tournaments.find(any()) } returns listOf(aTournament(joinLimitDate = now().minusDays(1)))
         every { tournaments.details(any()) } returns Some(aTournamentDetails())
+        every { cache.findAll() } returns emptyList()
 
         // When
         tournamentsService.listTournaments(query)
@@ -70,6 +75,7 @@ class TournamentsServiceTest : ShouldSpec({
         // Given
         val query = aQuery()
         every { tournaments.find(any()) } returns listOf(aTournament(joinLimitDate = now().plusDays(1)))
+        every { cache.findAll() } returns emptyList()
         every { tournaments.details(any()) } returns Some(aTournamentDetails(isParabad = true))
 
         // When
