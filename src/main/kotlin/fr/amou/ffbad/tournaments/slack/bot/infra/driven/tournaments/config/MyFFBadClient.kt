@@ -1,6 +1,6 @@
 package fr.amou.ffbad.tournaments.slack.bot.infra.driven.tournaments.config
 
-import fr.amou.ffbad.tournaments.slack.bot.infra.driven.tournaments.RestQuery
+import fr.amou.ffbad.tournaments.slack.bot.infra.driven.tournaments.Query
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.HeaderMap
@@ -17,6 +17,7 @@ data class RestTournament(
     val name: String,
     val number: String,
     val discipline: String,
+    val distance: String,
     val startDate: String,
     val endDate: String,
     val limitDate: String,
@@ -48,7 +49,7 @@ data class RestTournamentPrice(
 interface MyFFBadClient {
 
     @POST("/api/search")
-    fun findTournaments(@HeaderMap headers: Map<String, String>, @Body query: RestQuery): Call<RestTournamentsResponse>
+    fun findTournaments(@HeaderMap headers: Map<String, String>, @Body query: Query): Call<RestTournamentsResponse>
 
     @POST("api/tournament/{id}/informations")
     fun findTournamentDetails(@HeaderMap headers: Map<String, String>, @Path("id") id: String): Call<RestTournamentDetailsResponse>

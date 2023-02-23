@@ -1,9 +1,6 @@
 package fr.amou.ffbad.tournaments.slack.bot.domain.core
 
-import arrow.core.Some
-import fr.amou.ffbad.tournaments.slack.bot.domain.builder.aQuery
 import fr.amou.ffbad.tournaments.slack.bot.domain.builder.aTournament
-import fr.amou.ffbad.tournaments.slack.bot.domain.builder.aTournamentDetails
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Cache
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Publication
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Tournaments
@@ -25,65 +22,89 @@ class TournamentsServiceTest : ShouldSpec({
 
     should("not attempt to fetch tournament details when 0 tournaments are found") {
         // Given
-        val query = aQuery()
-        every { tournaments.find(any()) } returns emptyList()
         every { cache.findAll() } returns emptyList()
+        every { tournaments.findAll() } returns emptyList()
 
         // When
-        tournamentsService.listTournaments(query)
+        tournamentsService.listTournaments()
 
         // Then
-        verify(exactly = 1) { tournaments.find(any()) }
-        verify(exactly = 0) { tournaments.details(any()) }
-        verify(exactly = 0) { publication.publish(any(), any()) }
+        verify(exactly = 1) { cache.findAll() }
+        verify(exactly = 1) { tournaments.findAll() }
+        verify(exactly = 0) { publication.publish(any()) }
+        verify(exactly = 0) { cache.save(any(), any()) }
     }
 
     should("fetch tournaments and tournaments details") {
         // Given
-        val query = aQuery()
-        every { tournaments.find(any()) } returns listOf(aTournament(name = "My tournament"))
-        every { tournaments.details(any()) } returns Some(aTournamentDetails())
-        every { publication.publish(any(), any()) } returns false
         every { cache.findAll() } returns emptyList()
+        every { tournaments.findAll() } returns listOf(aTournament(competitionId = "12345", name = "My tournament"))
+        every { publication.publish(any()) } returns true
+        every { cache.save(any(), any()) } returns Unit
 
         // When
-        tournamentsService.listTournaments(query)
+        tournamentsService.listTournaments()
 
         // Then
-        verify(exactly = 1) { tournaments.find(any()) }
-        verify(exactly = 1) { tournaments.details(any()) }
-        verify(exactly = 1) { publication.publish(any(), any()) }
+        verify(exactly = 1) { cache.findAll() }
+        verify(exactly = 1) { tournaments.findAll() }
+        verify(exactly = 1) { publication.publish(any()) }
+        verify(exactly = 1) { cache.save("12345", "My tournament") }
     }
 
     should("filter out tournaments closed for registration") {
         // Given
-        val query = aQuery()
-        every { tournaments.find(any()) } returns listOf(aTournament(joinLimitDate = now().minusDays(1)))
-        every { tournaments.details(any()) } returns Some(aTournamentDetails())
         every { cache.findAll() } returns emptyList()
+        every { tournaments.findAll() } returns listOf(aTournament(joinLimitDate = now().minusDays(1)))
 
         // When
-        tournamentsService.listTournaments(query)
+        tournamentsService.listTournaments()
 
         // Then
-        verify(exactly = 1) { tournaments.find(any()) }
-        verify(exactly = 1) { tournaments.details(any()) }
-        verify(exactly = 0) { publication.publish(any(), any()) }
+        verify(exactly = 1) { cache.findAll() }
+        verify(exactly = 1) { tournaments.findAll() }
+        verify(exactly = 0) { publication.publish(any()) }
     }
 
     should("filter out parabad tournaments") {
         // Given
-        val query = aQuery()
-        every { tournaments.find(any()) } returns listOf(aTournament(joinLimitDate = now().plusDays(1)))
         every { cache.findAll() } returns emptyList()
-        every { tournaments.details(any()) } returns Some(aTournamentDetails(isParabad = true))
+        every { tournaments.findAll() } returns listOf(aTournament(isParabad = true))
 
         // When
-        tournamentsService.listTournaments(query)
+        tournamentsService.listTournaments()
 
         // Then
-        verify(exactly = 1) { tournaments.find(any()) }
-        verify(exactly = 1) { tournaments.details(any()) }
-        verify(exactly = 0) { publication.publish(any(), any()) }
+        verify(exactly = 1) { tournaments.findAll() }
+        verify(exactly = 0) { publication.publish(any()) }
+    }
+
+    should("not republished an already published tournament") {
+        // Given
+        every { cache.findAll() } returns listOf("1")
+        every { tournaments.findAll() } returns listOf(aTournament(competitionId = "1"))
+
+        // When
+        tournamentsService.listTournaments()
+
+        // Then
+        verify(exactly = 1) { tournaments.findAll() }
+        verify(exactly = 0) { publication.publish(any()) }
+        verify(exactly = 0) { cache.save(any(), any()) }
+    }
+
+    should("not save when publication fails") {
+        // Given
+        every { cache.findAll() } returns emptyList()
+        every { tournaments.findAll() } returns listOf(aTournament(competitionId = "1"))
+        every { publication.publish(any()) } returns false
+
+        // When
+        tournamentsService.listTournaments()
+
+        // Then
+        verify(exactly = 1) { tournaments.findAll() }
+        verify(exactly = 1) { publication.publish(any()) }
+        verify(exactly = 0) { cache.save(any(), any()) }
     }
 })

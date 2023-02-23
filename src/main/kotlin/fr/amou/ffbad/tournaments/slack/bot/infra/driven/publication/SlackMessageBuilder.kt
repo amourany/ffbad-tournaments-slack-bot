@@ -10,19 +10,18 @@ import com.slack.api.model.block.element.ImageElement
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
-import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfoDetails
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ofPattern
 import java.util.Locale.FRENCH
 
-fun buildTournamentSlackMessage(info: TournamentInfo, details: TournamentInfoDetails): List<LayoutBlock> {
+fun buildTournamentSlackMessage(info: TournamentInfo): List<LayoutBlock> {
 
     val dateLine = ":calendar: : ${info.dates.joinToString(", ") { it.toFrenchDate() }}"
-    val locationLine = ":round_pushpin: : ${info.location}"
+    val locationLine = ":round_pushpin: : ${info.location} (${info.distance}km)"
     val disciplinesLine = ":busts_in_silhouette: : ${info.disciplines.joinToString(", ") { it.toSlackMessage() }}"
     val rankingLine = ":chart_with_upwards_trend: : ${info.sublevels.joinToString(", ")}"
     val pricesLine = ":euro: : ${
-        details.prices.joinToString(", ")
+        info.prices.joinToString(", ")
         { "${it.price}€ pour ${it.registrationTable} tableau${if (it.registrationTable > 1) "x" else ""}" }
     }"
     val registrationEndLine = ":stopwatch: : Inscriptions jusqu'au ${info.joinLimitDate.toFrenchDate()}"
@@ -38,14 +37,14 @@ fun buildTournamentSlackMessage(info: TournamentInfo, details: TournamentInfoDet
     )
 }
 
-fun buildParticularRulesSlackMessage(details: TournamentInfoDetails): List<LayoutBlock> {
+fun buildParticularRulesSlackMessage(info: TournamentInfo): List<LayoutBlock> {
     return listOf(
         SectionBlock.builder()
             .text(PlainTextObject.builder().text("Toutes les infos : ").build())
             .accessory(
                 ButtonElement.builder()
-                    .text(PlainTextObject.builder().text(details.document.type).build())
-                    .url(details.document.url).build()
+                    .text(PlainTextObject.builder().text(info.document.type).build())
+                    .url(info.document.url).build()
             )
             .build(),
     )

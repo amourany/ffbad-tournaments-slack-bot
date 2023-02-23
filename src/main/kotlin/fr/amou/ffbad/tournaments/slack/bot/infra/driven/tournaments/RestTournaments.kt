@@ -1,9 +1,6 @@
 package fr.amou.ffbad.tournaments.slack.bot.infra.driven.tournaments
 
-import arrow.core.None
-import arrow.core.Option
-import arrow.core.Some
-import arrow.core.toOption
+import arrow.core.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Tournaments
@@ -12,6 +9,7 @@ import fr.amou.ffbad.tournaments.slack.bot.infra.driven.restCall
 import fr.amou.ffbad.tournaments.slack.bot.infra.driven.tournaments.config.MyFFBadClient
 import fr.amou.ffbad.tournaments.slack.bot.infra.driven.tournaments.config.RestTournament
 import fr.amou.ffbad.tournaments.slack.bot.infra.driven.tournaments.config.RestTournamentDetailsResponse
+import kotlinx.coroutines.*
 import org.slf4j.LoggerFactory.getLogger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -26,7 +24,22 @@ class RestTournaments(
 
     private val logger = getLogger(RestTournaments::class.java)
 
-    override fun find(query: Query): List<TournamentInfo> {
+    override fun findAll(): List<TournamentInfo> {
+
+        logger.info("Fetching all tournaments")
+
+        val tournaments = find(aQuery())
+
+        logger.info("Found ${tournaments.size} tournaments")
+
+        return runBlocking(Dispatchers.Default) {
+            tournaments.parallelMap { tournament ->
+                details(tournament.number).fold({ None }, { Some(toDomain(tournament, it)) })
+            }.filterOption()
+        }
+    }
+
+    fun find(query: Query): List<RestTournament> {
         val headers =
             mapOf(
                 "Caller-URL" to "/api/search/",
@@ -35,20 +48,19 @@ class RestTournaments(
             )
 
         return restCall(
-            call = myFFBadClient.findTournaments(headers = headers, query = query.toRestQuery()),
+            call = myFFBadClient.findTournaments(headers = headers, query = query),
             onSuccess = { response ->
-                val tournamentPage = response.body()!!
-                val tournaments = tournamentPage.tournaments.map { it.toDomain() }
-                when (tournamentPage.currentPage) {
-                    tournamentPage.totalPage -> tournaments
-                    else -> tournaments.plus(find(query.copy(offset = tournamentPage.currentPage * 20)))
+                val body = response.body()!!
+                when (body.currentPage) {
+                    body.totalPage -> body.tournaments
+                    else -> body.tournaments.plus(find(query.copy(offset = body.currentPage * 20)))
                 }
             },
             onFailure = OnFailure(emptyList(), "Unable to fetch tournaments.")
         )(logger)
     }
 
-    override fun details(id: String): Option<TournamentInfoDetails> {
+    fun details(id: String): Option<RestTournamentDetailsResponse> {
         val headers =
             mapOf(
                 "Caller-URL" to "/api/tournament/",
@@ -59,31 +71,33 @@ class RestTournaments(
 
         return restCall(
             call = myFFBadClient.findTournamentDetails(headers = headers, id = id),
-            onSuccess = { response -> Some(response.body()!!.toDomain()) },
+            onSuccess = { response -> Some(response.body()!!) },
             onFailure = OnFailure(None, "Unable to fetch tournaments.")
         )(logger)
     }
+
+    fun toDomain(tournament: RestTournament, details: RestTournamentDetailsResponse): TournamentInfo {
+        return TournamentInfo(
+            competitionId = tournament.number,
+            name = tournament.name,
+            disciplines = tournament.discipline.split(",").map { Disciplines.fromShortName(it) },
+            distance = tournament.distance.substringBefore(".").toInt(),
+            dates = LocalDate.parse(tournament.startDate).datesUntil(LocalDate.parse(tournament.endDate).plusDays(1))
+                .toList(),
+            joinLimitDate = LocalDate.parse(tournament.limitDate),
+            location = tournament.location,
+            sublevels = tournament.sublevel.split(",").map { Ranking.valueOf(it.trim()) },
+            logo = tournament.organizer.logo.toOption()
+                .fold({ "https://poona.ffbad.org/public/images/federation/logo-instance-4.jpg" }, { it }),
+            categories = details.categories,
+            description = details.description.toOption().fold({ "" }, { it }),
+            document = details.documents.map { TournamentDocument(it.type, it.url) }
+                .first { it.type == "Règlement particulier" },
+            isParabad = details.isParabad,
+            prices = details.prices.map { TournamentPrice(it.price, it.registrationTable) }
+        )
+    }
 }
 
-fun RestTournament.toDomain() =
-    TournamentInfo(
-        competitionId = number,
-        name = name,
-        disciplines = discipline.split(",").map { Disciplines.fromShortName(it) },
-        dates = LocalDate.parse(startDate).datesUntil(LocalDate.parse(endDate).plusDays(1)).toList(),
-        joinLimitDate = LocalDate.parse(limitDate),
-        location = location,
-        sublevels = sublevel.split(",").map { Ranking.valueOf(it.trim()) },
-        logo = organizer.logo.toOption()
-            .fold({ "https://poona.ffbad.org/public/images/federation/logo-instance-4.jpg" }, { it })
-    )
-
-fun RestTournamentDetailsResponse.toDomain() =
-    TournamentInfoDetails(
-        categories = categories,
-        description = description.toOption().fold({ "" }, { it }),
-        document = documents.map { TournamentDocument(it.type, it.url) }.first { it.type == "Règlement particulier" },
-        isParabad = isParabad,
-        prices = prices.map { TournamentPrice(it.price, it.registrationTable) }
-    )
-
+suspend fun <A, B> Iterable<A>.parallelMap(f: suspend (A) -> B): List<B> =
+    coroutineScope { map { async { f(it) } }.awaitAll() }

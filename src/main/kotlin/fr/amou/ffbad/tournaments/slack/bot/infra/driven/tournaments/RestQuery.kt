@@ -1,10 +1,14 @@
 package fr.amou.ffbad.tournaments.slack.bot.infra.driven.tournaments
 
-import fr.amou.ffbad.tournaments.slack.bot.domain.model.Query
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.AgeCategory.SENIOR
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking.*
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentType
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentType.TOURNAMENT
+import java.time.LocalDateTime.now
 
-data class RestQuery(
-    val type: String,
+data class Query(
+    val type: TournamentType,
     val text: String,
     val offset: Int,
     val postalCode: String,
@@ -16,17 +20,18 @@ data class RestQuery(
     val sort: String
 )
 
-
-fun Query.toRestQuery() = RestQuery(
-    type = type.name,
-    text = text,
-    postalCode = postalCode,
-    distance = distance,
-    sublevels = subLevels.map { it.toSubLevel() },
-    categories = categories.map { it.ordinal },
-    dateFrom = dateFrom.toString(),
-    dateTo = dateTo.toString(),
-    sort = sort,
+fun aQuery(
+    offset: Int = 0
+) = Query(
+    type = TOURNAMENT,
+    text = "",
+    postalCode = "92320",
+    distance = 12,
+    sublevels = listOf(D8, D9, P10, P11, P12, NC).map { it.toSubLevel() },
+    categories = listOf(SENIOR.ordinal),
+    dateFrom = now().toString(),
+    dateTo = now().plusYears(1).toString(),
+    sort = "dateFrom-ASC",
     offset = offset
 )
 

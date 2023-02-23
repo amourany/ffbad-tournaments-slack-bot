@@ -3,7 +3,6 @@ package fr.amou.ffbad.tournaments.slack.bot.infra.driven.publication
 import com.slack.api.Slack
 import com.slack.api.methods.request.chat.ChatPostMessageRequest
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
-import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfoDetails
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Publication
 import fr.amou.ffbad.tournaments.slack.bot.infra.driven.publication.config.SlackSettings
 import org.slf4j.LoggerFactory.getLogger
@@ -14,23 +13,23 @@ class SlackPublication(val slack: Slack, val slackSettings: SlackSettings) : Pub
 
     val logger = getLogger(SlackPublication::class.java)
 
-    override fun publish(info: TournamentInfo, details: TournamentInfoDetails): Boolean {
+    override fun publish(info: TournamentInfo): Boolean {
         val authSlackClient = slack.methods(slackSettings.token)
 
         val newTournamentMessage = ChatPostMessageRequest.builder()
             .channel(slackSettings.channel)
             .text("Nouveau tournoi : ${info.name}")
-            .blocks(buildTournamentSlackMessage(info, details))
+            .blocks(buildTournamentSlackMessage(info))
             .build()
         val newTournamentResponse = authSlackClient.chatPostMessage(newTournamentMessage)
 
         if (newTournamentResponse.isOk) {
 
-            if (details.description.isNotBlank()) {
+            if (info.description.isNotBlank()) {
                 val descriptionMessage = ChatPostMessageRequest.builder()
                     .channel(slackSettings.channel)
                     .threadTs(newTournamentResponse.ts)
-                    .blocks(buildDescriptionSlackMessage(details.description))
+                    .blocks(buildDescriptionSlackMessage(info.description))
                     .text("Message des organisateurs")
                     .build()
                 authSlackClient.chatPostMessage(descriptionMessage)
@@ -39,8 +38,8 @@ class SlackPublication(val slack: Slack, val slackSettings: SlackSettings) : Pub
             val particularRulesMessage = ChatPostMessageRequest.builder()
                 .channel(slackSettings.channel)
                 .threadTs(newTournamentResponse.ts)
-                .blocks(buildParticularRulesSlackMessage(details))
-                .text("Toutes les infos : ${details.document.url}")
+                .blocks(buildParticularRulesSlackMessage(info))
+                .text("Toutes les infos : ${info.document.url}")
                 .build()
             authSlackClient.chatPostMessage(particularRulesMessage)
         } else {
