@@ -10,6 +10,8 @@ slack:
 amazon:
   dynamodb:
     endpoint: ${AWS_DYNAMODB_ENDPOINT}
+    tablename:
+      prefix: ${TABLENAME_PREFIX}
   aws:
     accesskey: ${DYNAMO_ACCESS_KEY}
     secretkey: ${DYNAMO_SECRET_KEY}

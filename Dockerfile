@@ -1,4 +1,3 @@
-FROM eclipse-temurin:17-alpine
-EXPOSE 8080
-COPY target/*.jar ffbad-tournaments-slack-bot.jar
-ENTRYPOINT ["java", "-jar","ffbad-tournaments-slack-bot.jar"]
+FROM public.ecr.aws/aleph0io/lambda/java:17
+COPY target/*.jar "${LAMBDA_TASK_ROOT}/lib/"
+CMD [ "org.springframework.cloud.function.adapter.aws.FunctionIvoker::handleRequest" ]
