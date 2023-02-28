@@ -49,7 +49,7 @@ class DynamoDBConfig {
     // Table Name override:
     @Bean
     fun tableNameOverride(): TableNameOverride {
-        return TableNameOverride.withTableNamePrefix(tablenamePrefix)
+        return TableNameOverride.withTableNamePrefix(tablenamePrefix.trim())
     }
 
     @Bean
