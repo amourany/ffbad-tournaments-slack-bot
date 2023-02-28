@@ -30,8 +30,6 @@ class RestTournaments(
 
         val tournaments = find(aQuery())
 
-        logger.info("Found ${tournaments.size} tournaments")
-
         return runBlocking(Dispatchers.Default) {
             tournaments.parallelMap { tournament ->
                 details(tournament.number).fold({ None }, { Some(toDomain(tournament, it)) })
