@@ -8,6 +8,8 @@ import org.socialsignin.spring.data.dynamodb.repository.EnableScan
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
+import java.time.LocalDateTime.*
 import java.util.UUID.randomUUID
 
 @DynamoDBTable(tableName = "PublishedTournament")
@@ -22,11 +24,20 @@ class PublishedTournament {
     @DynamoDBAttribute
     var tournamentName: String
 
-    constructor() : this("", "", "")
-    constructor(id: String = randomUUID().toString(), competitionId: String, tournamentName: String) {
+    @DynamoDBAttribute
+    var publicationDate: String
+
+    constructor() : this("", "", "", "")
+    constructor(
+        id: String = randomUUID().toString(),
+        competitionId: String,
+        tournamentName: String,
+        publicationDate: String = now().toString()
+    ) {
         this.id = id
         this.competitionId = competitionId
         this.tournamentName = tournamentName
+        this.publicationDate = publicationDate
     }
 }
 
