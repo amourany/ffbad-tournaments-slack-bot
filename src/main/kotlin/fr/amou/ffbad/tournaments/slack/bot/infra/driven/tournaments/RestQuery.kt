@@ -25,7 +25,7 @@ fun aQuery(
 ) = Query(
     type = TOURNAMENT,
     text = "",
-    postalCode = "92320",
+    postalCode = "92240",
     distance = 12,
     sublevels = listOf(D8, D9, P10, P11, P12, NC).map { it.toSubLevel() },
     categories = listOf(SENIOR.ordinal),
