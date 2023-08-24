@@ -16,7 +16,8 @@ data class TournamentInfo(
     val description: String,
     val document: TournamentDocument,
     val isParabad: Boolean,
-    val prices: List<TournamentPrice>
+    val prices: List<TournamentPrice>,
+    val organizer: String
 )
 
 data class TournamentDocument(

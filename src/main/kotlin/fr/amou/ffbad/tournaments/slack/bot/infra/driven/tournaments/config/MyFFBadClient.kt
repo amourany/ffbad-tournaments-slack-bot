@@ -26,7 +26,7 @@ data class RestTournament(
     val organizer: Organizer
 )
 
-data class Organizer(val logo: String?)
+data class Organizer(val logo: String?, val initials: String)
 
 data class RestTournamentDetailsResponse(
     val categories: List<String>,

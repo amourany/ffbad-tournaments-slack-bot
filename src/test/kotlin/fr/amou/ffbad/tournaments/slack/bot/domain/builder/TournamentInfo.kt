@@ -1,6 +1,5 @@
 package fr.amou.ffbad.tournaments.slack.bot.domain.builder
 
-import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking.*
@@ -21,7 +20,8 @@ fun aTournament(
     description: String = "",
     document: TournamentDocument = TournamentDocument(type = "Réglement particulier", url = "some-url"),
     isParabad: Boolean = false,
-    prices: List<TournamentPrice> = listOf(TournamentPrice(price = 10, registrationTable = 1))
+    prices: List<TournamentPrice> = listOf(TournamentPrice(price = 10, registrationTable = 1)),
+    organizer: String = "USMM92"
 ) =
     TournamentInfo(
         competitionId = competitionId,
@@ -37,6 +37,7 @@ fun aTournament(
         description = description,
         document = document,
         isParabad = isParabad,
-        prices = prices
+        prices = prices,
+        organizer = organizer
     )
 

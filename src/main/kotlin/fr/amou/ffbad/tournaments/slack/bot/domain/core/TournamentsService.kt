@@ -21,7 +21,9 @@ class TournamentsService(
         val filteringRules = listOf(
             filterOutAlreadyPublishedTournaments(cache.findAll()),
             filterOutClosedTournaments(),
-            filterOutParabadTournaments()
+            filterOutParabadTournaments(),
+            filterOutTournamentsFromFFBad(),
+            filterOutTournamentsFromCommitteesOtherThanCommittee92()
         )
 
         val foundTournaments = tournaments.findAll()
@@ -54,5 +56,13 @@ class TournamentsService(
 
     private fun filterOutParabadTournaments():(tournament: TournamentInfo) -> Boolean {
         return { tournament -> !tournament.isParabad }
+    }
+
+    private fun filterOutTournamentsFromFFBad(): (tournament: TournamentInfo) -> Boolean {
+        return {tournament -> tournament.organizer != "FFBAD" }
+    }
+
+    private fun filterOutTournamentsFromCommitteesOtherThanCommittee92(): (tournament: TournamentInfo) -> Boolean {
+        return {tournament -> !listOf("CD75", "CD91", "CD93", "CD94").contains(tournament.organizer) }
     }
 }

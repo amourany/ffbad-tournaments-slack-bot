@@ -107,4 +107,30 @@ class TournamentsServiceTest : ShouldSpec({
         verify(exactly = 1) { publication.publish(any()) }
         verify(exactly = 0) { cache.save(any(), any()) }
     }
+
+    should("filter out tournaments from FFBAD") {
+        // Given
+        every { cache.findAll() } returns emptyList()
+        every { tournaments.findAll() } returns listOf(aTournament(organizer = "FFBAD"))
+
+        // When
+        tournamentsService.listTournaments()
+
+        // Then
+        verify(exactly = 1) { tournaments.findAll() }
+        verify(exactly = 0) { publication.publish(any()) }
+    }
+
+    should("filter out tournaments from CD75") {
+        // Given
+        every { cache.findAll() } returns emptyList()
+        every { tournaments.findAll() } returns listOf(aTournament(organizer = "CD75"))
+
+        // When
+        tournamentsService.listTournaments()
+
+        // Then
+        verify(exactly = 1) { tournaments.findAll() }
+        verify(exactly = 0) { publication.publish(any()) }
+    }
 })

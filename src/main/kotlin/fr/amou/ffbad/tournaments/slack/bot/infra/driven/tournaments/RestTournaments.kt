@@ -92,7 +92,8 @@ class RestTournaments(
             document = details.documents.map { TournamentDocument(it.type, it.url) }
                 .first { it.type == "Règlement particulier" },
             isParabad = details.isParabad,
-            prices = details.prices.map { TournamentPrice(it.price, it.registrationTable) }
+            prices = details.prices.map { TournamentPrice(it.price, it.registrationTable) },
+            organizer = tournament.organizer.initials
         )
     }
 }
