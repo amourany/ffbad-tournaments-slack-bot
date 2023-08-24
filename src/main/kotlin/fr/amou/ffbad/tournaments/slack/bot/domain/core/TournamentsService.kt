@@ -30,11 +30,16 @@ class TournamentsService(
 
         logger.info("Found ${foundTournaments.size} tournaments")
 
-        val filteredTournaments = foundTournaments.filter { tournament -> filteringRules.all { rule -> rule(tournament) } }
+        val (filteredInTournaments, filteredOutTournaments) = foundTournaments.partition { tournament ->
+            filteringRules.all { rule -> rule(tournament) }
+        }
 
-        logger.info("Found ${filteredTournaments.size} tournaments after filtering")
+        filteredOutTournaments.forEach { tournament ->
+            logger.info("Filtered out tournament : (name=${tournament.name}, joinLimitDate=${tournament.joinLimitDate}, isParabad=${tournament.isParabad}, organizer=${tournament.organizer})") }
 
-        val publishedTournaments = filteredTournaments
+        logger.info("Found ${filteredInTournaments.size} tournaments after filtering")
+
+        val publishedTournaments = filteredInTournaments
             .map {
                 val isPublished = publication.publish(it)
                 Pair(isPublished, it)
@@ -54,15 +59,15 @@ class TournamentsService(
         return { tournament -> tournament.joinLimitDate.isAfter(now()) }
     }
 
-    private fun filterOutParabadTournaments():(tournament: TournamentInfo) -> Boolean {
+    private fun filterOutParabadTournaments(): (tournament: TournamentInfo) -> Boolean {
         return { tournament -> !tournament.isParabad }
     }
 
     private fun filterOutTournamentsFromFFBad(): (tournament: TournamentInfo) -> Boolean {
-        return {tournament -> tournament.organizer != "FFBAD" }
+        return { tournament -> tournament.organizer != "FFBAD" }
     }
 
     private fun filterOutTournamentsFromCommitteesOtherThanCommittee92(): (tournament: TournamentInfo) -> Boolean {
-        return {tournament -> !listOf("CD75", "CD91", "CD93", "CD94").contains(tournament.organizer) }
+        return { tournament -> !listOf("CD75", "CD91", "CD93", "CD94").contains(tournament.organizer) }
     }
 }
