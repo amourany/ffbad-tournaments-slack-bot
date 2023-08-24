@@ -1,6 +1,7 @@
 package fr.amou.ffbad.tournaments.slack.bot.infra.driven.tournaments
 
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.AgeCategory.SENIOR
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.AgeCategory.VETERAN
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentType
@@ -28,7 +29,7 @@ fun aQuery(
     postalCode = "92240",
     distance = 12,
     sublevels = listOf(D8, D9, P10, P11, P12, NC).map { it.toSubLevel() },
-    categories = listOf(SENIOR.ordinal),
+    categories = listOf(SENIOR.ordinal, VETERAN.ordinal),
     dateFrom = now().toString(),
     dateTo = now().plusYears(1).toString(),
     sort = "dateFrom-ASC",
