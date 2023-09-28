@@ -35,13 +35,17 @@ class SlackPublication(val slack: Slack, val slackSettings: SlackSettings) : Pub
                 authSlackClient.chatPostMessage(descriptionMessage)
             }
 
-            val particularRulesMessage = ChatPostMessageRequest.builder()
-                .channel(slackSettings.channel)
-                .threadTs(newTournamentResponse.ts)
-                .blocks(buildParticularRulesSlackMessage(info))
-                .text("Toutes les infos : ${info.document.url}")
-                .build()
-            authSlackClient.chatPostMessage(particularRulesMessage)
+            info.documents.map { document ->
+                ChatPostMessageRequest.builder()
+                    .channel(slackSettings.channel)
+                    .threadTs(newTournamentResponse.ts)
+                    .blocks(buildDocumentSlackMessage(document))
+                    .text("${document.type.value} : ${document.url}")
+                    .build()
+            }.forEach {
+                authSlackClient.chatPostMessage(it)
+            }
+
         } else {
             logger.error(newTournamentResponse.toString())
         }

@@ -2,6 +2,15 @@ package fr.amou.ffbad.tournaments.slack.bot.domain.model
 
 import java.time.LocalDate
 
+enum class AllowedDocumentsType(val value: String) {
+    RULE_SET("Règlement particulier"),
+    INVITATION("Plaquette d'invitation");
+
+    companion object {
+        fun findFromValue(label: String): AllowedDocumentsType = values().first { it.value == label }
+    }
+}
+
 data class TournamentInfo(
     val competitionId: String,
     val name: String,
@@ -14,14 +23,14 @@ data class TournamentInfo(
     val logo: String,
     val categories: List<String>,
     val description: String,
-    val document: TournamentDocument,
+    val documents: List<TournamentDocument>,
     val isParabad: Boolean,
     val prices: List<TournamentPrice>,
     val organizer: String
 )
 
 data class TournamentDocument(
-    val type: String,
+    val type: AllowedDocumentsType,
     val url: String
 )
 

@@ -1,6 +1,7 @@
 package fr.amou.ffbad.tournaments.slack.bot.domain.builder
 
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.*
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.AllowedDocumentsType.RULE_SET
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking.*
 import java.time.LocalDate
@@ -18,7 +19,7 @@ fun aTournament(
     logo: String = "https://pbs.twimg.com/profile_images/625633822235693056/lNGUneLX_400x400.jpg",
     categories: List<String> = listOf("Adultes"),
     description: String = "",
-    document: TournamentDocument = TournamentDocument(type = "Réglement particulier", url = "some-url"),
+    documents: List<TournamentDocument> = listOf(TournamentDocument(type = RULE_SET, url = "some-url")),
     isParabad: Boolean = false,
     prices: List<TournamentPrice> = listOf(TournamentPrice(price = 10, registrationTable = 1)),
     organizer: String = "USMM92"
@@ -35,7 +36,7 @@ fun aTournament(
         logo = logo,
         categories = categories,
         description = description,
-        document = document,
+        documents = documents,
         isParabad = isParabad,
         prices = prices,
         organizer = organizer

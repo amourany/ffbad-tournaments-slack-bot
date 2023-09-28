@@ -9,6 +9,7 @@ import com.slack.api.model.block.element.ButtonElement
 import com.slack.api.model.block.element.ImageElement
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines.*
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentDocument
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ofPattern
@@ -37,14 +38,14 @@ fun buildTournamentSlackMessage(info: TournamentInfo): List<LayoutBlock> {
     )
 }
 
-fun buildParticularRulesSlackMessage(info: TournamentInfo): List<LayoutBlock> {
+fun buildDocumentSlackMessage(document: TournamentDocument): List<LayoutBlock> {
     return listOf(
         SectionBlock.builder()
-            .text(PlainTextObject.builder().text("Toutes les infos : ").build())
+            .text(PlainTextObject.builder().text("${document.type.value} : ").build())
             .accessory(
                 ButtonElement.builder()
-                    .text(PlainTextObject.builder().text(info.document.type).build())
-                    .url(info.document.url).build()
+                    .text(PlainTextObject.builder().text(document.type.value).build())
+                    .url(document.url).build()
             )
             .build(),
     )

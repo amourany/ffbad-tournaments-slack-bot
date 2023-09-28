@@ -3,6 +3,7 @@ package fr.amou.ffbad.tournaments.slack.bot.infra.driven.tournaments
 import arrow.core.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.*
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.AllowedDocumentsType.Companion.findFromValue
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Tournaments
 import fr.amou.ffbad.tournaments.slack.bot.infra.driven.OnFailure
 import fr.amou.ffbad.tournaments.slack.bot.infra.driven.restCall
@@ -75,6 +76,7 @@ class RestTournaments(
     }
 
     fun toDomain(tournament: RestTournament, details: RestTournamentDetailsResponse): TournamentInfo {
+        val allowedDocumentsTypes = AllowedDocumentsType.values().map { it.value }
         return TournamentInfo(
             competitionId = tournament.number,
             name = tournament.name,
@@ -89,8 +91,9 @@ class RestTournaments(
                 .fold({ "https://poona.ffbad.org/public/images/federation/logo-instance-4.jpg" }, { it }),
             categories = details.categories,
             description = details.description.toOption().fold({ "" }, { it }),
-            document = details.documents.map { TournamentDocument(it.type, it.url) }
-                .first { it.type == "Règlement particulier" },
+            documents = details.documents
+                .filter { allowedDocumentsTypes.contains(it.type) }
+                .map { TournamentDocument(findFromValue(it.type), it.url) },
             isParabad = details.isParabad,
             prices = details.prices.map { TournamentPrice(it.price, it.registrationTable) },
             organizer = tournament.organizer.initials
