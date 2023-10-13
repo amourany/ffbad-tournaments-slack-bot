@@ -65,9 +65,9 @@ fun buildDescriptionSlackMessage(description: String): List<LayoutBlock> {
 fun LocalDate.toFrenchDate(): String = this.format(ofPattern("EEEE dd MMMM", FRENCH))
 
 fun Disciplines.toSlackMessage(): String = when (this) {
-    MEN_SINGLE -> ":man_standing: Simple homme"
-    WOMEN_SINGLE -> ":woman_standing: Simple dame"
-    MEN_DOUBLE -> ":men_holding_hands: Double homme"
-    WOMEN_DOUBLE -> ":women_holding_hands: Double dame"
-    MIXTED_DOUBLE -> ":woman_and_man_holding_hands: Double mixte"
+    MEN_SINGLE -> ":man_standing: Simple Hommes"
+    WOMEN_SINGLE -> ":woman_standing: Simple Dames"
+    MEN_DOUBLE -> ":men_holding_hands: Double Hommes"
+    WOMEN_DOUBLE -> ":women_holding_hands: Double Dames"
+    MIXED_DOUBLE -> ":woman_and_man_holding_hands: Double Mixte"
 }

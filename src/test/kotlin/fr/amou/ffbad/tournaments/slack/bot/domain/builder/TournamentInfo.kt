@@ -10,7 +10,7 @@ import java.time.LocalDate.now
 fun aTournament(
     competitionId: String = "1234",
     name: String = "Tournoi de Malakoff",
-    disciplines: List<Disciplines> = listOf(MEN_DOUBLE, WOMEN_DOUBLE, MIXTED_DOUBLE),
+    disciplines: List<Disciplines> = listOf(MEN_DOUBLE, WOMEN_DOUBLE, MIXED_DOUBLE),
     distance: Int = 5,
     dates: List<LocalDate> = listOf(LocalDate.of(2023, 4, 5), LocalDate.of(2023, 4, 6)),
     joinLimitDate: LocalDate = now().plusDays(1),

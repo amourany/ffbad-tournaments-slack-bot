@@ -5,7 +5,7 @@ enum class Disciplines(val shortName: String) {
     WOMEN_SINGLE("SD"),
     MEN_DOUBLE("DH"),
     WOMEN_DOUBLE("DD"),
-    MIXTED_DOUBLE("DX");
+    MIXED_DOUBLE("DX");
 
     companion object {
         fun fromShortName(shortName: String) = values().first { it.shortName == shortName.trim() }
