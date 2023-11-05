@@ -1,6 +1,7 @@
 package fr.amou.ffbad.tournaments.slack.bot.domain.core
 
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentSearchQuery
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Cache
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Publication
 import fr.amou.ffbad.tournaments.slack.bot.domain.spi.Tournaments
@@ -10,13 +11,14 @@ import java.time.LocalDate.now
 
 @Service
 class TournamentsService(
-    private val tournaments: Tournaments, private val publication: Publication,
+    private val tournaments: Tournaments,
+    private val publication: Publication,
     private val cache: Cache
 ) {
 
     val logger = getLogger(TournamentsService::class.java)
 
-    fun listTournaments() {
+    fun listTournaments(query: TournamentSearchQuery) {
 
         val filteringRules = listOf(
             filterOutAlreadyPublishedTournaments(cache.findAll()),
@@ -26,16 +28,16 @@ class TournamentsService(
             filterOutTournamentsFromCommitteesOtherThanCommittee92()
         )
 
-        val foundTournaments = tournaments.findAll()
-
-        logger.info("Found ${foundTournaments.size} tournaments")
+        val foundTournaments = tournaments.findAllFrom(query)
+            .also { logger.info("Found ${it.size} tournaments") }
 
         val (filteredInTournaments, filteredOutTournaments) = foundTournaments.partition { tournament ->
             filteringRules.all { rule -> rule(tournament) }
         }
 
         filteredOutTournaments.forEach { tournament ->
-            logger.info("Filtered out tournament : (name=${tournament.name}, joinLimitDate=${tournament.joinLimitDate}, isParabad=${tournament.isParabad}, organizer=${tournament.organizer})") }
+            logger.info("Filtered out tournament : (name=${tournament.name}, joinLimitDate=${tournament.joinLimitDate}, isParabad=${tournament.isParabad}, organizer=${tournament.organizer})")
+        }
 
         logger.info("Found ${filteredInTournaments.size} tournaments after filtering")
 
@@ -45,8 +47,7 @@ class TournamentsService(
                 Pair(isPublished, it)
             }
             .filter { (isPublished) -> isPublished }
-
-        logger.info("Published ${publishedTournaments.size} tournaments")
+            .also { logger.info("Published ${it.size} tournaments") }
 
         publishedTournaments.forEach { (_, tournament) -> cache.save(tournament.competitionId, tournament.name) }
     }

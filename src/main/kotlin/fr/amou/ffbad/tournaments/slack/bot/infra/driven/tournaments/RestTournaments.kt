@@ -25,11 +25,11 @@ class RestTournaments(
 
     private val logger = getLogger(RestTournaments::class.java)
 
-    override fun findAll(): List<TournamentInfo> {
+    override fun findAllFrom(query: TournamentSearchQuery): List<TournamentInfo> {
 
         logger.info("Fetching all tournaments")
 
-        val tournaments = find(aQuery())
+        val tournaments = find(query.toRestQuery())
 
         return runBlocking(Dispatchers.Default) {
             tournaments.parallelMap { tournament ->
@@ -38,7 +38,7 @@ class RestTournaments(
         }
     }
 
-    fun find(query: Query): List<RestTournament> {
+    fun find(query: RestQuery): List<RestTournament> {
         val headers =
             mapOf(
                 "Caller-URL" to "/api/search/",
