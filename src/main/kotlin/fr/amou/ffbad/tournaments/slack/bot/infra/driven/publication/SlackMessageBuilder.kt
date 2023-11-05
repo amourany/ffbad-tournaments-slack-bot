@@ -11,6 +11,9 @@ import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentDocument
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentInfo
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document.OutputSettings
+import org.jsoup.safety.Safelist
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ofPattern
 import java.util.Locale.FRENCH
@@ -52,14 +55,27 @@ fun buildDocumentSlackMessage(document: TournamentDocument): List<LayoutBlock> {
 }
 
 fun buildDescriptionSlackMessage(description: String): List<LayoutBlock> {
+
+    val sanitizedDescription = sanitizeHTMLMessage(description)
     return listOf(
         SectionBlock.builder()
             .text(PlainTextObject.builder().text("Un mot des organisateurs : ").build())
             .build(),
         SectionBlock.builder()
-            .text(MarkdownTextObject.builder().text("> ${description.replace("\n", "\n> ")}").build())
+            .text(MarkdownTextObject.builder().text("> ${sanitizedDescription.replace("\n", "\n>")}").build())
             .build()
     )
+}
+
+fun sanitizeHTMLMessage(htmlMessage: String):String {
+    val jsoupDoc = Jsoup.parse(htmlMessage)
+    val outputSettings = OutputSettings()
+    outputSettings.prettyPrint(false)
+    jsoupDoc.outputSettings(outputSettings)
+    jsoupDoc.select("br").before("\\n")
+    jsoupDoc.select("p").before("\\n")
+    val str: String = jsoupDoc.text().replace("\\n", "\n").trim()
+    return Jsoup.clean(str, "", Safelist.none(), outputSettings)
 }
 
 fun LocalDate.toFrenchDate(): String = this.format(ofPattern("EEEE dd MMMM", FRENCH))
