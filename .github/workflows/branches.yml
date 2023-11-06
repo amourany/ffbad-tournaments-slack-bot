@@ -37,7 +37,7 @@ jobs:
 
     - name: Login to Amazon ECR
       id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      uses: aws-actions/amazon-ecr-login@v2
 
     - name: Build, tag, and push the image to Amazon ECR
       id: build-image
@@ -69,7 +69,7 @@ jobs:
         
     - name: Login to Amazon ECR
       id: login-ecr-to-deploy-dev
-      uses: aws-actions/amazon-ecr-login@v1
+      uses: aws-actions/amazon-ecr-login@v2
         
     - name: AWS Lambda Deploy
       uses: appleboy/lambda-action@v0.1.5

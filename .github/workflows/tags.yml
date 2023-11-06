@@ -33,18 +33,20 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-        aws-region: eu-west-3
+        aws-region: us-east-1
 
     - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      id: login-ecr-public
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        registry-type: public
 
     - name: Build, tag, and push the image to Amazon ECR
       id: build-image
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ secrets.PUBLIC_REPO_NAME }}
-        IMAGE_TAG: $GITHUB_REF_NAME
+        ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+        ECR_REPOSITORY: ${{ vars.PUBLIC_REPO_NAME }}
+        IMAGE_TAG: ${{ github.ref_name }}
       run: |
         # Build a docker container and push it to ECR 
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
@@ -63,20 +65,16 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_PUBLIC_ECR_ACCESS_KEY }}
-        aws-secret-access-key: ${{ secrets.AWS_PUBLIC_ECR_SECRET_KEY }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
         aws-region: eu-west-3
-        
-    - name: Login to Amazon ECR
-      id: login-ecr-to-deploy-dev
-      uses: aws-actions/amazon-ecr-login@v1
         
     - name: AWS Lambda Deploy
       uses: appleboy/lambda-action@v0.1.5
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr-to-deploy-dev.outputs.registry }}
-        ECR_REPOSITORY: ${{ secrets.PUBLIC_REPO_NAME }}
-        IMAGE_TAG: $GITHUB_REF_NAME
+        ECR_REGISTRY: public.ecr.aws
+        ECR_REPOSITORY: ${{ vars.PUBLIC_REPO_NAME }}
+        IMAGE_TAG: ${{ github.ref_name }}
       with:
         aws_region: eu-west-3
         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
@@ -95,20 +93,16 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_PUBLIC_ECR_ACCESS_KEY }}
-        aws-secret-access-key: ${{ secrets.AWS_PUBLIC_ECR_SECRET_KEY }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
         aws-region: eu-west-3
-
-    - name: Login to Amazon ECR
-      id: login-ecr-to-deploy-prod
-      uses: aws-actions/amazon-ecr-login@v1
 
     - name: AWS Lambda Deploy
       uses: appleboy/lambda-action@v0.1.5
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr-to-deploy-prod.outputs.registry }}
-        ECR_REPOSITORY: ${{ secrets.PUBLIC_REPO_NAME }}
-        IMAGE_TAG: $GITHUB_REF_NAME
+        ECR_REGISTRY: public.ecr.aws
+        ECR_REPOSITORY: ${{ vars.PUBLIC_REPO_NAME }}
+        IMAGE_TAG: ${{ github.ref_name }}
       with:
         aws_region: eu-west-3
         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
