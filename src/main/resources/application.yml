@@ -1,7 +1,7 @@
 myffbad:
   url: https://www.myffbad.fr
   searchVerifyToken: ${SEARCH_VERIFY_TOKEN}
-  detailsVerifyToken: ${SEARCH_DETAILS_TOKEN}
+  detailsVerifyToken: ${DETAILS_VERIFY_TOKEN}
 
 slack:
   token: ${SLACK_TOKEN}

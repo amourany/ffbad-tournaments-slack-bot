@@ -43,7 +43,7 @@ The following instructions should help you deploy the app:
    In "Permissions" the app only need the scope (Bot Token Scopes) `chat:write`
    
    In this section, you can also find your _Bot User OAuth Token_ (`xoxb-XXX), it will be needed later
-2. See [MyFFBad tokens](docs/MyFFBad-tokens.md) on how to retrieve both tokens
+2. The FFBad API requires 2 header tokens: see [MyFFBad tokens](docs/MyFFBad-tokens.md) on how to retrieve both of them
 3. Create a new DynamoDB database with a table named `PublishedTournament`
 4. Create a new IAM User for the previously created database, with RW authorizations on it
 5. Set up a new AWS Lambda function and set it to run a Docker image. 
@@ -57,8 +57,8 @@ The following instructions should help you deploy the app:
    DYNAMO_SECRET_KEY: <dynamodb_user_secret_key>
    
    // MyFFBad header tokens
-   SEARCH_VERIFY_TOKEN: <myffbad_header_verify_token>
-   SEARCH_DETAILS_TOKEN: <myffbad_header_details_token>
+   SEARCH_VERIFY_TOKEN: <myffbad_header_search_verify_token>
+   DETAILS_VERIFY_TOKEN: <myffbad_header_details_verify_token>
    
    // Slack
    SLACK_CHANNEL: #my-tournaments-channel
