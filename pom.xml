@@ -114,6 +114,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>io.mockk</groupId>
+            <artifactId>mockk-jvm</artifactId>
+            <version>1.13.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.kotest.extensions</groupId>
             <artifactId>kotest-assertions-arrow-jvm</artifactId>
             <version>1.4.0</version>
