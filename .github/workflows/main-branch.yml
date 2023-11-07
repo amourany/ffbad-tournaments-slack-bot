@@ -72,7 +72,7 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: AWS Lambda Deploy
-      uses: appleboy/lambda-action@v0.1.9
+      uses: appleboy/lambda-action@v0.1.5
       env:
         ECR_REGISTRY: ${{ steps.login-ecr-to-deploy-dev.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
@@ -104,7 +104,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: AWS Lambda Deploy
-        uses: appleboy/lambda-action@v0.1.9
+        uses: appleboy/lambda-action@v0.1.5
         env:
           ECR_REGISTRY: ${{ steps.login-ecr-to-deploy-prod.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
