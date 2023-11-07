@@ -27,6 +27,9 @@ Here is an example of what a message looks like
 ## Getting Started
 Here are the steps needed to run the app for your club.
 
+### Download
+Download the app from the [Releases](https://github.com/amourany/ffbad-tournaments-slack-bot/releases) page
+
 ### Prerequisites
 - AWS Lambda: The app is designed to be an [AWS Lambda](https://aws.amazon.com/lambda/) application
 - AWS DynamoDB: The app stores already published tournaments inside an [AWS DynamoDB](https://aws.amazon.com/dynamodb/) database
@@ -46,10 +49,10 @@ The following instructions should help you deploy the app:
 2. The FFBad API requires 2 header tokens: see [MyFFBad tokens](docs/MyFFBad-tokens.md) on how to retrieve both of them
 3. Create a new DynamoDB database with a table named `PublishedTournament`
 4. Create a new IAM User for the previously created database, with RW authorizations on it
-5. Set up a new AWS Lambda function and set it to run a Docker image. 
-   
-    The Docker public registry containing the image can be found here: public.ecr.aws/q7d1s4e7/ffbad_tournaments_slack_bot
-6. Provide the following environment variable to the Lambda function (from the configuration panel):
+5. Set up a new AWS Lambda function and set it to run on a `Java 17` environment and `x86_64` architecture
+6. Upload the `.jar` file you want to run
+7. In the _Runtime settings_ section, set the _handler_ to `org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest`
+8. Provide the following environment variable to the Lambda function (from the configuration panel):
     ```
    // DynamoDB
    AWS_DYNAMODB_ENDPOINT: dynamodb.XXX.amazonaws.com
@@ -64,7 +67,7 @@ The following instructions should help you deploy the app:
    SLACK_CHANNEL: #my-tournaments-channel
    SLACK_TOKEN: xoxb-XXX
    ```
-7. _Optional:_ You may want to automatically and regularly trigger the function. [AWS EventBridge (CloudWatch Events)](https://aws.amazon.com/eventbridge/) can be a good option.
+9. _Optional:_ You may want to automatically and regularly trigger the function. [AWS EventBridge (CloudWatch Events)](https://aws.amazon.com/eventbridge/) can be a good option.
 
    Just set up the function to be triggered using a CRON-based event. Tournaments are not published that often, triggering the function once (or twice) a day is more than enough.
 

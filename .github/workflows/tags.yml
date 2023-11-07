@@ -27,6 +27,13 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Rename artefact
+      run: mv target/ffbad-*-aws.jar target/ffbad-tournaments-slack-app-${{ github.ref_name }}.jar
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: target/ffbad-tournaments-slack-app-${{ github.ref_name }}.jar
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
