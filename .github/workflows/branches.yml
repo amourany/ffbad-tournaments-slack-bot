@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: CI for branches
+name: Main
 
 on:
   push:
@@ -70,7 +70,7 @@ jobs:
     - name: Login to Amazon ECR
       id: login-ecr-to-deploy-dev
       uses: aws-actions/amazon-ecr-login@v2
-        
+
     - name: AWS Lambda Deploy
       uses: appleboy/lambda-action@v0.1.5
       env:
@@ -83,3 +83,35 @@ jobs:
         aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
         function_name: ${{ vars.FUNCTION_NAME }}
         image_uri: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+  deploy-to-prod:
+
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+    needs: deploy-to-dev
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: eu-west-3
+
+      - name: Login to Amazon ECR
+        id: login-ecr-to-deploy-prod
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: AWS Lambda Deploy
+        uses: appleboy/lambda-action@v0.1.5
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr-to-deploy-prod.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+          IMAGE_TAG: 1.0
+        with:
+          aws_region: eu-west-3
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
+          function_name: ${{ vars.FUNCTION_NAME }}
+          image_uri: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}

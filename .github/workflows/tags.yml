@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: CI for tags
+name: Tags
 
 on:
   push:
@@ -54,58 +54,3 @@ jobs:
         docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         
-  deploy-to-dev:
-    
-    runs-on: ubuntu-latest
-    environment:
-      name: Dev
-    needs: build
-    
-    steps:  
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-        aws-region: eu-west-3
-        
-    - name: AWS Lambda Deploy
-      uses: appleboy/lambda-action@v0.1.5
-      env:
-        ECR_REGISTRY: public.ecr.aws
-        ECR_REPOSITORY: ${{ vars.PUBLIC_REPO_NAME }}
-        IMAGE_TAG: ${{ github.ref_name }}
-      with:
-        aws_region: eu-west-3
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
-        function_name: ${{ vars.FUNCTION_NAME }}
-        image_uri: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-
-  deploy-to-prod:
-
-    runs-on: ubuntu-latest
-    environment:
-      name: Production
-    needs: deploy-to-dev
-
-    steps:
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-        aws-region: eu-west-3
-
-    - name: AWS Lambda Deploy
-      uses: appleboy/lambda-action@v0.1.5
-      env:
-        ECR_REGISTRY: public.ecr.aws
-        ECR_REPOSITORY: ${{ vars.PUBLIC_REPO_NAME }}
-        IMAGE_TAG: ${{ github.ref_name }}
-      with:
-        aws_region: eu-west-3
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
-        function_name: ${{ vars.FUNCTION_NAME }}
-        image_uri: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
