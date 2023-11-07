@@ -1,5 +1,4 @@
 # French badminton tournaments Slack notifier
-[![Main](https://github.com/amourany/ffbad-tournaments-slack-bot/actions/workflows/branches.yml/badge.svg?branch=main)](https://github.com/amourany/ffbad-tournaments-slack-bot/actions/workflows/branches.yml)
 
 This is an app publishing Slack messages about new badminton tournaments available in France.
 
