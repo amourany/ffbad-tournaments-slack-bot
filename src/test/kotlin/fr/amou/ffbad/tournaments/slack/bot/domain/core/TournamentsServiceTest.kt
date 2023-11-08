@@ -134,7 +134,55 @@ class TournamentsServiceTest : ShouldSpec({
         verify(exactly = 0) { publication.publish(any()) }
     }
 
-    should("filter out tournaments from CD75") {
+    should("not filter out tournaments from clubs") {
+        // Given
+        val query = aTournamentSearchQuery()
+        every { cache.findAll() } returns emptyList()
+        every { tournaments.findAllFrom(query) } returns listOf(
+            aTournament(
+                competitionId = "12345",
+                name = "My tournament",
+                organizer = "USMM92"
+            )
+        )
+        every { publication.publish(any()) } returns true
+        every { cache.save(any(), any()) } returns Unit
+
+        // When
+        tournamentsService.listTournaments(query)
+
+        // Then
+        verify(exactly = 1) { cache.findAll() }
+        verify(exactly = 1) { tournaments.findAllFrom(query) }
+        verify(exactly = 1) { publication.publish(any()) }
+        verify(exactly = 1) { cache.save("12345", "My tournament") }
+    }
+
+    should("not filter out tournaments from committee associated with the club") {
+        // Given
+        val query = aTournamentSearchQuery()
+        every { cache.findAll() } returns emptyList()
+        every { tournaments.findAllFrom(query) } returns listOf(
+            aTournament(
+                competitionId = "12345",
+                name = "My tournament",
+                organizer = "CD92"
+            )
+        )
+        every { publication.publish(any()) } returns true
+        every { cache.save(any(), any()) } returns Unit
+
+        // When
+        tournamentsService.listTournaments(query)
+
+        // Then
+        verify(exactly = 1) { cache.findAll() }
+        verify(exactly = 1) { tournaments.findAllFrom(query) }
+        verify(exactly = 1) { publication.publish(any()) }
+        verify(exactly = 1) { cache.save("12345", "My tournament") }
+    }
+
+    should("filter out tournaments from other committees than the club one") {
         // Given
         val query = aTournamentSearchQuery()
         every { cache.findAll() } returns emptyList()

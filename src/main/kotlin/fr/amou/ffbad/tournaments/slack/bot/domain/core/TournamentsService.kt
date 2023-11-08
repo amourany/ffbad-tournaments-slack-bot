@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory.*
 import org.springframework.stereotype.Service
 import java.time.LocalDate.now
 
+val DEPARTMENTAL_COMMITTEE_REGEX = """CD[0-9]*""".toRegex()
+
 @Service
 class TournamentsService(
     private val tournaments: Tournaments,
@@ -25,7 +27,7 @@ class TournamentsService(
             filterOutClosedTournaments(),
             filterOutParabadTournaments(),
             filterOutTournamentsFromFFBad(),
-            filterOutTournamentsFromCommitteesOtherThanCommittee92()
+            filterOutTournamentsFromCommitteesOtherThanCurrentClubCommittee(query.zipCode)
         )
 
         val foundTournaments = tournaments.findAllFrom(query)
@@ -68,7 +70,8 @@ class TournamentsService(
         return { tournament -> tournament.organizer != "FFBAD" }
     }
 
-    private fun filterOutTournamentsFromCommitteesOtherThanCommittee92(): (tournament: TournamentInfo) -> Boolean {
-        return { tournament -> !listOf("CD75", "CD91", "CD93", "CD94").contains(tournament.organizer) }
+    private fun filterOutTournamentsFromCommitteesOtherThanCurrentClubCommittee(queryZipCode:String): (tournament: TournamentInfo) -> Boolean {
+        val clubDepartmentCode = queryZipCode.substring(0,2)
+        return { tournament -> !DEPARTMENTAL_COMMITTEE_REGEX.matches(tournament.organizer) || tournament.organizer == "CD$clubDepartmentCode" }
     }
 }
