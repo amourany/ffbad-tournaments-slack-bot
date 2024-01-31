@@ -52,6 +52,27 @@ class SlackPublication(val slack: Slack, val slackSettings: SlackSettings) : Pub
 
         return newTournamentResponse.isOk
     }
+
+    override fun publishError(stackTrace: String) {
+        val authSlackClient = slack.methods(slackSettings.token)
+
+        val errorMessage = ChatPostMessageRequest.builder()
+            .channel(slackSettings.channel)
+            .text(":robot_face: Erreur en récupérant les tournois")
+            .blocks(buildErrorSlackMessage())
+            .build()
+
+        val errorResponse = authSlackClient.chatPostMessage(errorMessage)
+        if (errorResponse.isOk) {
+            val stackMessage = ChatPostMessageRequest.builder()
+                .channel(slackSettings.channel)
+                .threadTs(errorResponse.ts)
+                .text("Détails de l'erreur")
+                .blocks(buildStackSlackMessage(stackTrace))
+                .build()
+            authSlackClient.chatPostMessage(stackMessage)
+        }
+    }
 }
 
 

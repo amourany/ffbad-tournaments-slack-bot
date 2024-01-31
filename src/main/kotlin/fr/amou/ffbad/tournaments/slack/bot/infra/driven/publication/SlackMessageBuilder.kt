@@ -67,7 +67,28 @@ fun buildDescriptionSlackMessage(description: String): List<LayoutBlock> {
     )
 }
 
-fun sanitizeHTMLMessage(htmlMessage: String):String {
+fun buildErrorSlackMessage(): List<LayoutBlock> {
+    return listOf(
+        HeaderBlock.builder()
+            .text(PlainTextObject.builder().text(":robot_face: Erreur en récupérant les tournois").build())
+            .build(),
+        SectionBlock.builder().text(PlainTextObject.builder().text(":x: J'ai rencontré une erreur en récupérant les informations des tournois").build()).build(),
+    )
+}
+
+fun buildStackSlackMessage(stackTrace: String): List<LayoutBlock> {
+
+    return listOf(
+        SectionBlock.builder()
+            .text(PlainTextObject.builder().text("Détails de l'erreur : ").build())
+            .build(),
+        SectionBlock.builder()
+            .text(MarkdownTextObject.builder().text("> ${stackTrace.replace("\n", "\n>")}").build())
+            .build()
+    )
+}
+
+fun sanitizeHTMLMessage(htmlMessage: String): String {
     val jsoupDoc = Jsoup.parse(htmlMessage)
     val outputSettings = OutputSettings()
     outputSettings.prettyPrint(false)

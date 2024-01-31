@@ -54,6 +54,11 @@ class TournamentsService(
         publishedTournaments.forEach { (_, tournament) -> cache.save(tournament.competitionId, tournament.name) }
     }
 
+    fun publishError(throwable: Throwable) {
+        logger.error(throwable.message, throwable)
+        publication.publishError(throwable.stackTraceToString())
+    }
+
     private fun filterOutAlreadyPublishedTournaments(alreadyPublishedTournaments: List<String>): (tournament: TournamentInfo) -> Boolean {
         return { tournament -> !alreadyPublishedTournaments.contains(tournament.competitionId) }
     }
