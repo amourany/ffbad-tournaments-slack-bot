@@ -53,6 +53,7 @@ class DynamoDBConfig {
     }
 
     @Bean
+    @Primary
     fun dynamoDBMapperConfig(): DynamoDBMapperConfig {
         return DynamoDBMapperConfig.builder().withTableNameOverride(tableNameOverride()).build()
     }
