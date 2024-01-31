@@ -8,7 +8,7 @@ enum class Disciplines(val shortName: String) {
     MIXED_DOUBLE("DX");
 
     companion object {
-        fun fromShortName(shortName: String) = values().first { it.shortName == shortName.trim() }
+        fun fromShortName(shortName: String) =  runCatching { entries.first { it.shortName == shortName.trim() }}.getOrNull()
     }
 }
 

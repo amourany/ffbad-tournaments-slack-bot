@@ -76,11 +76,11 @@ class RestTournaments(
     }
 
     fun toDomain(tournament: RestTournament, details: RestTournamentDetailsResponse): TournamentInfo {
-        val allowedDocumentsTypes = AllowedDocumentsType.values().map { it.value }
+        val allowedDocumentsTypes = AllowedDocumentsType.entries.map { it.value }
         return TournamentInfo(
             competitionId = tournament.number,
             name = tournament.name,
-            disciplines = tournament.discipline.split(",").map { Disciplines.fromShortName(it) },
+            disciplines = tournament.discipline.split(",").mapNotNull { Disciplines.fromShortName(it) },
             distance = tournament.distance.substringBefore(".").toInt(),
             dates = LocalDate.parse(tournament.startDate).datesUntil(LocalDate.parse(tournament.endDate).plusDays(1))
                 .toList(),
