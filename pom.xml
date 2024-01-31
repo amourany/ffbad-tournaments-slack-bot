@@ -6,7 +6,7 @@
 
     <artifactId>ffbad-tournaments-slack-bot</artifactId>
     <groupId>fr.amou</groupId>
-    <version>1.2.0</version>
+    <version>1.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>FFBad Tournaments Slack Bot</name>
