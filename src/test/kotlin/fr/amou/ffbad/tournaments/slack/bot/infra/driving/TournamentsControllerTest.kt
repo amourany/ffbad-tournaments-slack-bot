@@ -17,7 +17,7 @@ class TournamentsControllerTest : ShouldSpec({
     should("search for tournaments") {
         // Given
         val jsonQuery = """{"zipCode":"92240", "distance":10, "subLevels":["D9","P10"], "categories":["SENIOR"]}"""
-        every { tournaments.from(any()) } returns Unit
+        every { tournaments.from(any()) } returns "OK"
 
         // When
         tournamentsController.run().apply(jsonQuery)
@@ -30,7 +30,7 @@ class TournamentsControllerTest : ShouldSpec({
     should("not run search query for an empty zipCode") {
         // Given
         val jsonQuery = """{"zipCode":"", "distance":10, "subLevels":["D9","P10"], "categories":["SENIOR"]}"""
-        every { tournaments.from(any()) } returns Unit
+        every { tournaments.from(any()) } returns "KO"
 
         // When
         tournamentsController.run().apply(jsonQuery)
@@ -42,7 +42,7 @@ class TournamentsControllerTest : ShouldSpec({
     should("not run search query for an unknown ranking") {
         // Given
         val jsonQuery = """{"zipCode":"92240", "distance":10, "subLevels":["ABC","P10"], "categories":["SENIOR"]}"""
-        every { tournaments.from(any()) } returns Unit
+        every { tournaments.from(any()) } returns "KO"
 
         // When
         tournamentsController.run().apply(jsonQuery)
@@ -54,7 +54,7 @@ class TournamentsControllerTest : ShouldSpec({
     should("not run search query for an unknown age category") {
         // Given
         val jsonQuery = """{"zipCode":"92240", "distance":10, "subLevels":["D9","P10"], "categories":["SENIOR", "ABC"]}"""
-        every { tournaments.from(any()) } returns Unit
+        every { tournaments.from(any()) } returns "KO"
 
         // When
         tournamentsController.run().apply(jsonQuery)
