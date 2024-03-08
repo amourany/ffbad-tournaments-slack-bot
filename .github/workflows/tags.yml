@@ -33,6 +33,6 @@ jobs:
       run: mv target/ffbad-*-aws.jar target/ffbad-tournaments-slack-app-${{ github.ref_name }}.jar
 
     - name: Create Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: target/ffbad-tournaments-slack-app-${{ github.ref_name }}.jar
