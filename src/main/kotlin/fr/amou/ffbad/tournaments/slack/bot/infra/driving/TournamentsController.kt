@@ -41,7 +41,10 @@ class TournamentsController(val listTournaments: ListTournaments) {
             val query: JsonSearchQuery = ObjectMapper().readValue(searchParams)
 
             validateSearchQuery(query).fold(
-                { errors -> errors.forEach { logger.error(it) } },
+                { errors ->
+                    errors.forEach { logger.error(it) }
+                    "KO"
+                },
                 {
                     val tournamentSearchQuery = TournamentSearchQuery(
                         zipCode = query.zipCode,
@@ -52,7 +55,6 @@ class TournamentsController(val listTournaments: ListTournaments) {
                     listTournaments.from(tournamentSearchQuery)
                 }
             )
-            "OK"
         }
     }
 
@@ -76,12 +78,12 @@ class TournamentsController(val listTournaments: ListTournaments) {
     }
 
     fun validateSubLevels(subLevels: List<String>): List<String> {
-        val subLevelsNames = Ranking.values().map { it.name }
+        val subLevelsNames = Ranking.entries.map { it.name }
         return subLevels.filter { !subLevelsNames.contains(it) }.map { "Unknown sub-level : $it" }
     }
 
     fun validateAgeCategories(ageCategories: List<String>): List<String> {
-        val agesCategoryNames = AgeCategory.values().map { it.name }
+        val agesCategoryNames = AgeCategory.entries.map { it.name }
         return ageCategories.filter { !agesCategoryNames.contains(it) }.map { "Unknown age category : $it" }
     }
 }
