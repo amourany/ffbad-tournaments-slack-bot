@@ -2,6 +2,7 @@ package fr.amou.ffbad.tournaments.slack.bot.infra.driving
 
 import arrow.core.*
 import arrow.core.Either.*
+import com.amazonaws.services.lambda.runtime.Context
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.*
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -12,7 +13,9 @@ import fr.amou.ffbad.tournaments.slack.bot.domain.model.AgeCategory
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentSearchQuery
 import org.slf4j.LoggerFactory
+import org.springframework.cloud.function.adapter.aws.AWSLambdaUtils.AWS_CONTEXT
 import org.springframework.context.annotation.Bean
+import org.springframework.messaging.Message
 import org.springframework.stereotype.Component
 import java.util.function.Function
 
@@ -40,9 +43,12 @@ class TournamentsController(val listTournaments: ListTournaments) {
     val logger = LoggerFactory.getLogger(TournamentsController::class.java)
 
     @Bean
-    fun run(): Function<String, String> {
-        return Function<String, String> { searchParams ->
+    fun run(): Function<Message<String>, String> {
+        return Function<Message<String>, String> { message ->
 
+            val awsContext = message.headers[AWS_CONTEXT] as Context
+
+            val searchParams = message.payload
             val (queries) = ObjectMapper().readValue<JsonSearchQueries>(searchParams)
 
             val validations = queries.map { validateSearchQuery(it) }
@@ -63,7 +69,7 @@ class TournamentsController(val listTournaments: ListTournaments) {
                         categories = query.categories.map { AgeCategory.valueOf(it) }
                     )
                 }
-                listTournaments.from(tournamentSearchQueries)
+                listTournaments.from(tournamentSearchQueries, awsContext.functionName)
             }
         }
     }

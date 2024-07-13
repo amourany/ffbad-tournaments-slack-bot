@@ -16,22 +16,22 @@ class ServiceBasedTournamentsTest: ShouldSpec({
     val serviceBasedTournaments = ServiceBasedTournaments(tournamentsService)
     should("fetch tournaments") {
 
-        every { tournamentsService.listTournaments(any()) } returns Unit
+        every { tournamentsService.listTournaments(any(), any()) } returns Unit
 
-        serviceBasedTournaments.from(listOf(aTournamentSearchQuery()))
+        serviceBasedTournaments.from(listOf(aTournamentSearchQuery()), "test")
 
-        verify(exactly = 1) { tournamentsService.listTournaments(any()) }
+        verify(exactly = 1) { tournamentsService.listTournaments(any(), any()) }
         verify(exactly = 0) { tournamentsService.publishError(any()) }
     }
 
     should("publish message when an error occurs when fetching tournaments") {
 
-        every { tournamentsService.listTournaments(any()) } throws NoSuchElementException()
+        every { tournamentsService.listTournaments(any(), any()) } throws NoSuchElementException()
         every { tournamentsService.publishError(any()) } returns Unit
 
-        serviceBasedTournaments.from(listOf(aTournamentSearchQuery()))
+        serviceBasedTournaments.from(listOf(aTournamentSearchQuery()), "test")
 
-        verify(exactly = 1) { tournamentsService.listTournaments(any()) }
+        verify(exactly = 1) { tournamentsService.listTournaments(any(), any()) }
         verify(exactly = 1) { tournamentsService.publishError(any()) }
     }
 })

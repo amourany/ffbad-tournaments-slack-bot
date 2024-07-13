@@ -20,12 +20,12 @@ class TournamentsService(
 
     val logger = getLogger(TournamentsService::class.java)
 
-    fun listTournaments(queries: List<TournamentSearchQuery>) {
+    fun listTournaments(queries: List<TournamentSearchQuery>, querySource: String) {
 
         val queriedCommittees = queries.map { it.zipCode }
 
         val filteringRules = listOf(
-            filterOutAlreadyPublishedTournaments(cache.findAll()),
+            filterOutAlreadyPublishedTournaments(cache.findAllByQuerySource(querySource)),
             filterOutClosedTournaments(),
             filterOutParabadTournaments(),
             filterOutTournamentsFromFFBad(),
@@ -58,7 +58,7 @@ class TournamentsService(
             .filter { (isPublished) -> isPublished }
             .also { logger.info("Published ${it.size} tournaments") }
 
-        publishedTournaments.forEach { (_, tournament) -> cache.save(tournament.competitionId, tournament.name) }
+        publishedTournaments.forEach { (_, tournament) -> cache.save(tournament.competitionId, tournament.name, querySource) }
     }
 
     fun publishError(throwable: Throwable) {
