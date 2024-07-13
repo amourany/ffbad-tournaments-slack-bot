@@ -1,6 +1,7 @@
 package fr.amou.ffbad.tournaments.slack.bot.domain.builder
 
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.*
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.AgeCategory.ADULTES
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.AllowedDocumentsType.RULE_SET
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking.*
@@ -17,7 +18,7 @@ fun aTournament(
     location: String = "Malakoff",
     sublevels: List<Ranking> = listOf(D9, P10, P11, P12, NC),
     logo: String = "https://pbs.twimg.com/profile_images/625633822235693056/lNGUneLX_400x400.jpg",
-    categories: List<String> = listOf("Adultes"),
+    categories: List<AgeCategory> = listOf(ADULTES),
     description: String = "",
     documents: List<TournamentDocument> = listOf(TournamentDocument(type = RULE_SET, url = "some-url")),
     isParabad: Boolean = false,

@@ -50,6 +50,8 @@ class SlackPublication(val slack: Slack, val slackSettings: SlackSettings) : Pub
             logger.error(newTournamentResponse.toString())
         }
 
+        Thread.sleep(1_000)
+
         return newTournamentResponse.isOk
     }
 

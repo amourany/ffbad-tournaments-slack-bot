@@ -87,7 +87,7 @@ class RestTournaments(
             sublevels = tournament.sublevel.split(",").map { Ranking.valueOf(it.trim()) },
             logo = tournament.organizer.logo.toOption()
                 .fold({ "https://poona.ffbad.org/public/images/federation/logo-instance-4.jpg" }, { it }),
-            categories = details.categories,
+            categories = details.categories.map { AgeCategory.findFromValue(it) }.distinct(),
             description = details.description.toOption().fold({ "" }, { it }),
             documents = details.documents
                 .filter { allowedDocumentsTypes.contains(it.type) }
