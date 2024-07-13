@@ -18,7 +18,7 @@ class ServiceBasedTournamentsTest: ShouldSpec({
 
         every { tournamentsService.listTournaments(any()) } returns Unit
 
-        serviceBasedTournaments.from(aTournamentSearchQuery())
+        serviceBasedTournaments.from(listOf(aTournamentSearchQuery()))
 
         verify(exactly = 1) { tournamentsService.listTournaments(any()) }
         verify(exactly = 0) { tournamentsService.publishError(any()) }
@@ -29,7 +29,7 @@ class ServiceBasedTournamentsTest: ShouldSpec({
         every { tournamentsService.listTournaments(any()) } throws NoSuchElementException()
         every { tournamentsService.publishError(any()) } returns Unit
 
-        serviceBasedTournaments.from(aTournamentSearchQuery())
+        serviceBasedTournaments.from(listOf(aTournamentSearchQuery()))
 
         verify(exactly = 1) { tournamentsService.listTournaments(any()) }
         verify(exactly = 1) { tournamentsService.publishError(any()) }

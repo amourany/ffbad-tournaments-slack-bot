@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class ServiceBasedTournaments(val tournamentsService: TournamentsService) : ListTournaments {
-    override fun from(query: TournamentSearchQuery): String = runCatching { tournamentsService.listTournaments(query) }
+    override fun from(queries: List<TournamentSearchQuery>): String = runCatching { tournamentsService.listTournaments(queries) }
         .fold(
             onSuccess = { "OK" },
             onFailure = {
