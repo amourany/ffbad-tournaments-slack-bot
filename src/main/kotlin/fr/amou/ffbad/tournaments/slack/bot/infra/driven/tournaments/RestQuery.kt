@@ -1,9 +1,6 @@
 package fr.amou.ffbad.tournaments.slack.bot.infra.driven.tournaments
 
-import fr.amou.ffbad.tournaments.slack.bot.domain.model.AgeCategory.SENIOR
-import fr.amou.ffbad.tournaments.slack.bot.domain.model.AgeCategory.VETERAN
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking
-import fr.amou.ffbad.tournaments.slack.bot.domain.model.Ranking.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentSearchQuery
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentType
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentType.TOURNAMENT

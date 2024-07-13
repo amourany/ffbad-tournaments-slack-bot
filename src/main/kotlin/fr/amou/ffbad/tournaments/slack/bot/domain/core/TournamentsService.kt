@@ -20,18 +20,25 @@ class TournamentsService(
 
     val logger = getLogger(TournamentsService::class.java)
 
-    fun listTournaments(query: TournamentSearchQuery) {
+    fun listTournaments(queries: List<TournamentSearchQuery>) {
+
+        val queriedCommittees = queries.map { it.zipCode }
 
         val filteringRules = listOf(
             filterOutAlreadyPublishedTournaments(cache.findAll()),
             filterOutClosedTournaments(),
             filterOutParabadTournaments(),
             filterOutTournamentsFromFFBad(),
-            filterOutTournamentsFromCommitteesOtherThanCurrentClubCommittee(query.zipCode)
+            filterOutTournamentsFromCommitteesOtherThanCurrentClubCommittee(queriedCommittees)
         )
 
-        val foundTournaments = tournaments.findAllFrom(query)
-            .also { logger.info("Found ${it.size} tournaments") }
+        logger.info("Fetching all tournaments")
+
+        val foundTournaments = queries.mapIndexed { index, query ->
+            tournaments.findAllFrom(query)
+                .also { logger.info("Found ${it.size} tournaments from query $index") }
+        }.flatten()
+            .toSet()
 
         val (filteredInTournaments, filteredOutTournaments) = foundTournaments.partition { tournament ->
             filteringRules.all { rule -> rule(tournament) }
@@ -75,8 +82,8 @@ class TournamentsService(
         return { tournament -> tournament.organizer != "FFBAD" }
     }
 
-    private fun filterOutTournamentsFromCommitteesOtherThanCurrentClubCommittee(queryZipCode:String): (tournament: TournamentInfo) -> Boolean {
-        val clubDepartmentCode = queryZipCode.substring(0,2)
-        return { tournament -> !DEPARTMENTAL_COMMITTEE_REGEX.matches(tournament.organizer) || tournament.organizer == "CD$clubDepartmentCode" }
+    private fun filterOutTournamentsFromCommitteesOtherThanCurrentClubCommittee(queryZipCode: List<String>): (tournament: TournamentInfo) -> Boolean {
+        val clubDepartmentShortName = queryZipCode.map { it.substring(0, 2) }.map { "CD$it" }
+        return { tournament -> !DEPARTMENTAL_COMMITTEE_REGEX.matches(tournament.organizer) || clubDepartmentShortName.contains(tournament.organizer) }
     }
 }

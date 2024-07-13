@@ -78,14 +78,18 @@ The parameters must be provided when triggering the lambda.
 Here is an example of the expected `json` input
 ```json
 {
-  "zipCode": "92240", // French zip code of location to search from 
-  "distance": 12, // Radius in km to search around zip code
-  "subLevels": ["R6","D7","D8", "D9"], // Players rankings to include for the search. 
-                      // It will search for any subset of specified rankings.
-                      // Values are from FFBad official ranking names (From N1 to NC)
-  "categories": ["SENIOR", "VETERAN"] // Age categories to search tournaments for.
-  // It will search for any subset of specified categories.
-  // Values are from FFBad official age categories names (From MINIBAD to VETERAN)
+   "queries" : [
+      {
+        "zipCode": "92240", // French zip code of location to search from 
+        "distance": 12, // Radius in km to search around zip code
+        "subLevels": ["R6","D7","D8", "D9"], // Players rankings to include for the search. 
+                            // It will search for any subset of specified rankings.
+                            // Values are from FFBad official ranking names (From N1 to NC)
+        "categories": ["SENIOR", "VETERAN"] // Age categories to search tournaments for.
+        // It will search for any subset of specified categories.
+        // Values are from FFBad official age categories names (From MINIBAD to VETERAN)
+      }
+   ]
 }
 ```
 

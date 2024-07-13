@@ -27,8 +27,6 @@ class RestTournaments(
 
     override fun findAllFrom(query: TournamentSearchQuery): List<TournamentInfo> {
 
-        logger.info("Fetching all tournaments")
-
         val tournaments = find(query.toRestQuery())
 
         return runBlocking(Dispatchers.Default) {
@@ -50,8 +48,8 @@ class RestTournaments(
             call = myFFBadClient.findTournaments(headers = headers, query = query),
             onSuccess = { response ->
                 val body = response.body()!!
-                when (body.currentPage) {
-                    body.totalPage -> body.tournaments
+                when {
+                    body.totalPage == 0 || body.totalPage == body.currentPage -> body.tournaments
                     else -> body.tournaments.plus(find(query.copy(offset = body.currentPage * 20)))
                 }
             },
