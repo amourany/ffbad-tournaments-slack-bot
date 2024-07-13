@@ -7,6 +7,8 @@ import com.slack.api.model.block.composition.MarkdownTextObject
 import com.slack.api.model.block.composition.PlainTextObject
 import com.slack.api.model.block.element.ButtonElement
 import com.slack.api.model.block.element.ImageElement
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.AgeCategory
+import fr.amou.ffbad.tournaments.slack.bot.domain.model.AgeCategory.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.Disciplines.*
 import fr.amou.ffbad.tournaments.slack.bot.domain.model.TournamentDocument
@@ -23,6 +25,7 @@ fun buildTournamentSlackMessage(info: TournamentInfo): List<LayoutBlock> {
     val dateLine = ":calendar: : ${info.dates.joinToString(", ") { it.toFrenchDate() }}"
     val locationLine = ":round_pushpin: : ${info.location} (${info.distance}km)"
     val disciplinesLine = ":busts_in_silhouette: : ${info.disciplines.joinToString(", ") { it.toSlackMessage() }}"
+    val ageLine = ":birthday: : ${info.categories.joinToString(", ") { it.toSlackMessage() }}"
     val rankingLine = ":chart_with_upwards_trend: : ${info.sublevels.joinToString(", ")}"
     val pricesLine = ":euro: : ${
         info.prices.joinToString(", ")
@@ -32,7 +35,7 @@ fun buildTournamentSlackMessage(info: TournamentInfo): List<LayoutBlock> {
     val moreInfosLine = "Pour plus d'infos et vous organiser :arrow_heading_down:"
 
     val messageContent =
-        listOf(dateLine, locationLine, disciplinesLine, rankingLine, pricesLine, registrationEndLine, moreInfosLine)
+        listOf(dateLine, locationLine, disciplinesLine, ageLine, rankingLine, pricesLine, registrationEndLine, moreInfosLine)
 
     return listOf(
         HeaderBlock.builder().text(PlainTextObject.builder().text(info.name).build()).build(),
@@ -107,4 +110,16 @@ fun Disciplines.toSlackMessage(): String = when (this) {
     MEN_DOUBLE -> ":men_holding_hands: Double Hommes"
     WOMEN_DOUBLE -> ":women_holding_hands: Double Dames"
     MIXED_DOUBLE -> ":woman_and_man_holding_hands: Double Mixte"
+}
+
+fun AgeCategory.toSlackMessage(): String = when (this) {
+    MINIBAD -> "${value}s (< 9 ans)"
+    POUSSIN -> "${value}s (< 11 ans)"
+    BENJAMIN -> "${value}s (< 13 ans)"
+    MINIME -> "$value (< 15 ans)"
+    CADET -> "${value}s (< 17 ans)"
+    JUNIOR -> "${value}s (< 19 ans)"
+    SENIOR -> "${value}s"
+    VETERAN -> "${value}s"
+    ADULTES -> value
 }

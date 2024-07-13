@@ -7,7 +7,7 @@ enum class AllowedDocumentsType(val value: String) {
     INVITATION("Plaquette d'invitation");
 
     companion object {
-        fun findFromValue(label: String): AllowedDocumentsType = values().first { it.value == label }
+        fun findFromValue(label: String): AllowedDocumentsType = entries.first { it.value == label }
     }
 }
 
@@ -21,7 +21,7 @@ data class TournamentInfo(
     val location: String,
     val sublevels: List<Ranking>,
     val logo: String,
-    val categories: List<String>,
+    val categories: List<AgeCategory>,
     val description: String,
     val documents: List<TournamentDocument>,
     val isParabad: Boolean,
